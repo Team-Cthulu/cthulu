@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table class="center">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Type</th>
+    </tr>
+    <tbody>
+   {% for item in item_types %}
+    <tr>
+        <td>{{item['item_type_id']}}</td>
+        <td>{{item['item_type']}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock%}

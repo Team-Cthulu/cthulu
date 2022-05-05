@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table class="center">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Height (in)</th>
+        <th>Weight (lb)</th>
+        <th>Birth Date</th>
+        <th>Combat Ready</th>
+        <th>Conscription Date</th>
+        <th>Salary (gold coins)</th>
+        <th>Vehicle</th>
+        <th>Job</th>
+    </tr>
+    <tbody>
+    {% for item in orcs %}
+    <tr>
+        <td>{{item['orc_id']}}</td>
+        <td>{{item['first_name']}}</td>
+        <td>{{item['last_name']}}</td>
+        <td>{{item['height_inches']}}</td>
+        <td>{{item['weight_lb']}}</td>
+        <td>{{item['birth_date']}}</td>
+        <td>{{item['combat_ready']}}</td>
+        <td>{{item['conscription_date']}}</td>
+        <td>{{item['salary_gold_coins']}}</td>
+        <td>{{item['vehicle_id']}}</td>
+        <td>{{item['job_id']}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock%}

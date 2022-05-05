@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table class="center">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Skill Name</th>
+    </tr>
+    <tbody>
+    {% for item in skills %}
+    <tr>
+        <td>{{item['skill_id']}}</td>
+        <td>{{item['skill_name']}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock%}

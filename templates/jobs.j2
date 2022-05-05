@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table class="center">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Number of Rations</th>
+        <th>Combat Role</th>
+    </tr>
+    <tbody>
+    {% for item in jobs %}
+    <tr>
+        <td>{{item['job_id']}}</td>
+        <td>{{item['title']}}</td>
+        <td>{{item['num_rations']}}</td>
+        <td>{{item['combat_role']}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock%}

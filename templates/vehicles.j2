@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table class="center">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Vehicle Type</th>
+        <th>Number of Spikes</th>
+        <th>Colr</th>
+        <th>Manufacture Year</th>
+    </tr>
+    <tbody>
+    {% for item in vehicles %}
+    <tr>
+        <td>{{item['vehicle_id']}}</td>
+        <td>{{item['vehicle_type']}}</td>
+        <td>{{item['num_spikes']}}</td>
+        <td>{{item['color']}}</td>
+        <td>{{item['manufacture_year']}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock%}

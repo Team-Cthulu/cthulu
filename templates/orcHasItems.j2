@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table class="center">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Item</th>
+        <th>Item Quantity</th>
+    </tr>
+    <tbody>
+    {% for item in orc_items %}
+    <tr>
+        <td>{{item['orc_item_id']}}</td>
+        <td>{{item['first_name']}}</td>
+        <td>{{item['last_name']}}</td>
+        <td>{{item['item']}}</td>
+        <td>{{item['item_quantity']}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock%}
