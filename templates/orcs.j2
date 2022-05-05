@@ -33,4 +33,32 @@
     </tr>
     {% endfor %}
     </table>
+    <div>
+        <form method="POST" id="addOrc">
+            <legend><strong>Add Orc</strong></legend>
+                <fieldset class="fields">
+                    <label> First Name </label> <input type="text" name"first_name">
+                    <label> Last Name </label> <input type="text" name"last_name">
+                    <label> Height (in) </label> <input type="text" name"height_inches">
+                    <label> Last Name </label> <input type="text" name"weight_lb">
+                    <label> Birth Date </label> <input type="text" name"birth_date">
+                    <label> Combat Ready </label> <input type="text" name"combat_ready">
+                    <label> Conscription Date </label> <input type="text" name"conscription_date">
+                    <label> Salary (gold coins) </label> <input type="text" name"salary_gold_coins">
+                    <label> Vehicle </label> <select name="vehicle_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Not A Unicorn</option>
+                        <option value="2">War Machine</option>
+                        <option value="3">Ice Cream Truck</option>
+                        </select>
+                    <label> Job </label> <select name="job_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Cook</option>
+                        <option value="2">Peon</option>
+                        <option value="3">Warlord</option>
+                        </select>
+                </fieldset>
+                    <input class="btn" type="submit" id="addOrc" value="Add Orc">
+        </form>
+    </div>
 {% endblock%}
