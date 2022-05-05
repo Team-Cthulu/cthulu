@@ -21,4 +21,25 @@
     </tr>
     {% endfor %}
     </table>
+    <div>
+        <form method="POST" id="addOrcItem">
+            <legend><strong>Work work</strong></legend>
+                <fieldset class="fields">
+                    <label> Orc </label> <select name="orc_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Orgrim Warhammer</option>
+                        <option value="2">Little Peon</option>
+                        <option value="3">Mother Theresa</option>
+                        </select>
+                    <label> Skill </label> <select name="skill_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Fighting</option>
+                        <option value="2">Fletching</option>
+                        <option value="3">Cooking</option>
+                        </select>
+                    <label> Skill Level </label> <input type="text" name"skill_level">
+                </fieldset>
+                    <input class="btn" type="submit" id="addItem" value="Add Skill">
+        </form>
+    </div>
 {% endblock%}

@@ -7,7 +7,7 @@
         <th>ID</th>
         <th>Vehicle Type</th>
         <th>Number of Spikes</th>
-        <th>Colr</th>
+        <th>Color</th>
         <th>Manufacture Year</th>
     </tr>
     <tbody>
@@ -21,4 +21,16 @@
     </tr>
     {% endfor %}
     </table>
+    <div>
+        <form method="POST" id="addVehicle">
+            <legend><strong>Add Vehicle</strong></legend>
+                <fieldset class="fields">
+                    <label> Vehicle Type </label> <input type="text" name"vehicle_type">
+                    <label> Number of Spikes </label> <input type="text" name"num_spikes">
+                    <label> Color </label> <input type="text" name"color">
+                    <label> Manucture Year </label> <input type="text" name"manufacture_year">
+                </fieldset>
+                    <input class="btn" type="submit" id="addVehicle" value="Add Vehicle">
+        </form>
+    </div>
 {% endblock%}

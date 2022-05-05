@@ -19,4 +19,18 @@
     </tr>
     {% endfor %}
     </table>
+    <div>
+        <form method="POST" id="addJob">
+            <legend><strong>Add Job</strong></legend>
+                <fieldset class="fields">
+                    <label> Title </label> <input type="text" name"title">
+                    <label> Number of Rations </label> <input type="text" name"num_rations">
+                    <label> Combat Role </label> <select name="combat_role">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                        </select>
+                </fieldset>
+                    <input class="btn" type="submit" id="addJob" value="Add Job">
+        </form>
+    </div>
 {% endblock%}

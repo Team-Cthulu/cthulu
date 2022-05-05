@@ -15,4 +15,13 @@
     </tr>
     {% endfor %}
     </table>
+    <div>
+        <form method="POST" id="addSkill">
+            <legend><strong>Add Skill</strong></legend>
+                <fieldset class="fields">
+                    <label> Name </label> <input type="text" name"skill_name">
+                </fieldset>
+                    <input class="btn" type="submit" id="addSkill" value="Add Skill">
+        </form>
+    </div>
 {% endblock%}

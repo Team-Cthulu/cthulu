@@ -30,10 +30,12 @@
         <td>{{item['salary_gold_coins']}}</td>
         <td>{{item['vehicle_id']}}</td>
         <td>{{item['job_id']}}</td>
+        <td><a href="#">Edit</a></td>
+        <td><a href="#">Delete</a></td>
     </tr>
     {% endfor %}
     </table>
-    <div>
+    <div id="add">
         <form method="POST" id="addOrc">
             <legend><strong>Add Orc</strong></legend>
                 <fieldset class="fields">
@@ -58,7 +60,49 @@
                         <option value="3">Warlord</option>
                         </select>
                 </fieldset>
-                    <input class="btn" type="submit" id="addOrc" value="Add Orc">
+                    <input class="btn" type="submit" id="addSaveOrc" value="Add Orc">
+        </form>
+    </div>
+    <div id="update">
+        <form method="POST" id="updateOrc">
+            <legend><strong>Update Orc</strong></legend>
+                <fieldset class="fields">
+                <input type="hidden" name="orc_id" id=updateorcID" value="1">
+                <label> ID: </label> 1    
+                    <label> First Name </label> <input type="text" name"first_name" value="Orgrim">
+                    <label> Last Name </label> <input type="text" name"last_name" value="Warhammer">
+                    <label> Height (in) </label> <input type="text" name"height_inches" value=72>
+                    <label> Weight (lb) </label> <input type="text" name"weight_lb" value=265>
+                    <label> Birth Date </label> <input type="text" name"birth_date" value="1964-12-25">
+                    <label> Combat Ready </label> <input type="text" name"combat_ready" value=1>
+                    <label> Conscription Date </label> <input type="text" name"conscription_date" value="1982-04-20">
+                    <label> Salary (gold coins) </label> <input type="text" name"salary_gold_coins" value=12323490>
+                    <label> Vehicle </label> <select name="vehicle_id" >
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Not A Unicorn</option>
+                        <option value="2" selected>War Machine</option>
+                        <option value="3">Ice Cream Truck</option>
+                        </select>
+                    <label> Job </label> <select name="job_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Cook</option>
+                        <option value="2">Peon</option>
+                        <option value="3" selected>Warlord</option>
+                        </select>
+                </fieldset>
+                    <input class="btn" type="submit" id="updateSaveOrc" value="Update Orc">
+        </form>
+    </div>
+    <div id="delete" style="display: block>
+        <form method="POST" id="deleteOrc">
+            <legend><strong>Delete Orc</strong></legend>
+                <fieldset class="fields">
+                <p>WAAAGH?</p>
+                <input type="hidden" name="orc_id" id="deleteorcID" value="1">
+                <label><strong>ID: </strong></label> 1
+                    <label><strong>Name</strong></label> Orgrim Warhammer
+            </fieldset>
+            <input class="btn" type="submit" id="DeleteOrc" value="Delete Orc">
         </form>
     </div>
 {% endblock%}

@@ -18,7 +18,43 @@
         <td>{{item['last_name']}}</td>
         <td>{{item['item']}}</td>
         <td>{{item['item_quantity']}}</td>
+        <td><a href="#">Edit</a></td>
+        <td><a href="#">Delete</a></td>
     </tr>
     {% endfor %}
     </table>
+    <div>
+        <form method="POST" id="addOrcItem">
+            <legend><strong>Give Item To A Deserving Orc</strong></legend>
+                <fieldset class="fields">
+                    <label> Orc </label> <select name="orc_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Orgrim Doomhammer</option>
+                        <option value="2">Little Peon</option>
+                        <option value="3">Mother Theresa</option>
+                        </select>
+                    <label> Item </label> <select name="item_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Warhammer</option>
+                        <option value="2">Lute</option>
+                        <option value="3">Fork</option>
+                        </select>
+                    <label> Quantity </label> <input type="text" name"item_quantity">
+                </fieldset>
+                    <input class="btn" type="submit" id="addItem" value="Bequeath Item(s)">
+        </form>
+    </div>
+    <div id="delete" style="display: block>
+        <form method="POST" id="deleteOrcHasItem">
+            <legend><strong>Orc Is No Longer Deserving Of This Item</strong></legend>
+                <fieldset class="fields">
+                <p>Take it?</p>
+                <input type="hidden" name="orc_item_id" id="deleteorcitemID" value="1">
+                <label><strong>ID: </strong></label> 1
+                    <label><strong>Name</strong></label> Orgrim Doomhammer
+                    <label><strong>Item</strong></label> Warhammer
+            </fieldset>
+            <input class="btn" type="submit" id="DeleteOrcItem" value="Take It">
+        </form>
+    </div>
 {% endblock%}

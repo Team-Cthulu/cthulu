@@ -23,4 +23,23 @@
     </tr>
     {% endfor %}
     </table>
+    <div>
+        <form method="POST" id="addItem">
+            <legend><strong>Add Item</strong></legend>
+                <fieldset class="fields">
+                    <label> Name </label> <input type="text" name"item_name">
+                    <label> Color </label> <input type="text" name"item_color">
+                    <label> Year </label> <input type="text" name"item_year">
+                    <label> Size </label> <input type="text" name"item_size">
+                    <label> Type </label> <select name="item_type_id">
+                        <option value="0">&nbsp;</option>
+                        <option value="1">Weapon</option>
+                        <option value="2">Tool</option>
+                        <option value="3">Toy</option>
+                        <option value="4">Musical Instrument</option>
+                        </select>
+                </fieldset>
+                    <input class="btn" type="submit" id="addItem" value="Add Item">
+        </form>
+    </div>
 {% endblock%}
