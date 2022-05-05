@@ -8,11 +8,11 @@ app = Flask(__name__)
 # Routes 
 @app.route('/')
 def index():
-    return render_template("main.j2", title="Home")
+    return render_template("index.html", title="Home")
 
 @app.route('/index.html')
 def view_home():
-    return render_template("main.j2", title="Home")
+    return render_template("index.html", title="Home")
 
 @app.route('/items')
 def view_items():
