@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask import request, redirect
 # from flask import MySQL
 from db_credentials import host, user, passwd, db
-# from db_connector import connect_to_database, execute_query
+from db_connector import connect_to_database, execute_query
 import os
 
 # Configuration
@@ -56,13 +56,13 @@ def view_skills():
 def view_vehicles():
     return render_template("vehicles.j2", title="Vehicles", vehicles=vehicle_info)
 
-# @app.route('/db-test')
-# def test_db_connection():
-#     print("Testing database using credentials from db_credentials.py")
-#     db_connection = connect_to_database()
-#     query = "SELECT * from Orcs;"
-#     result = execute_query(db_connection_query)
-#     return result
+@app.route('/db-test')
+def test_db_connection():
+    print("Testing database using credentials from db_credentials.py")
+    db_connection = connect_to_database()
+    query = "SELECT * from Orcs;"
+    result = execute_query(db_connection_query)
+    return result
 
 # Listener
 
