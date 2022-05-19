@@ -28,7 +28,7 @@ if __name__ == '__main__':
     db = connect_to_database()
     query = "SELECT * from Orcs;"
     results = execute_query(db, query)
-    print("Printing results of %s" %s query)
+    print("Printing results of %s" % query)
 
     for r in results.fetchall():
         print(r)

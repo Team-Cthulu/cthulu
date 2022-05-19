@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 from flask import request, redirect
-# from flask import MySQL
+from flask import MySQL
 from db_credentials import host, user, passwd, db
-# from db_connector import connect_to_database, execute_query
+from db_connector import connect_to_database, execute_query
 import os
 
 # Configuration
