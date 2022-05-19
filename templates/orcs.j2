@@ -19,17 +19,17 @@
     <tbody>
     {% for item in orcs %}
     <tr>
-        <td>{{item['orc_id']}}</td>
-        <td>{{item['first_name']}}</td>
-        <td>{{item['last_name']}}</td>
-        <td>{{item['height_inches']}}</td>
-        <td>{{item['weight_lb']}}</td>
-        <td>{{item['birth_date']}}</td>
-        <td>{{item['combat_ready']}}</td>
-        <td>{{item['conscription_date']}}</td>
-        <td>{{item['salary_gold_coins']}}</td>
-        <td>{{item['vehicle_id']}}</td>
-        <td>{{item['job_id']}}</td>
+        <td>{{item[0]}}</td>
+        <td>{{item[1]}}</td>
+        <td>{{item[2]}}</td>
+        <td>{{item[3]}}</td>
+        <td>{{item[4]}}</td>
+        <td>{{item[5]}}</td>
+        <td>{{item[6]}}</td>
+        <td>{{item[7]}}</td>
+        <td>{{item[8]}}</td>
+        <td>{{item[9]}}</td>
+        <td>{{item[10]}}</td>
         <td><a href="#">Edit</a></td>
         <td><a href="#">Delete</a></td>
     </tr>
@@ -39,25 +39,25 @@
         <form method="POST" id="addOrc">
             <legend><strong>Add Orc</strong></legend>
                 <fieldset class="fields">
-                    <label> First Name </label> <input type="text" name"first_name">
-                    <label> Last Name </label> <input type="text" name"last_name">
-                    <label> Height (in) </label> <input type="text" name"height_inches">
-                    <label> Last Name </label> <input type="text" name"weight_lb">
-                    <label> Birth Date </label> <input type="text" name"birth_date">
-                    <label> Combat Ready </label> <input type="text" name"combat_ready">
-                    <label> Conscription Date </label> <input type="text" name"conscription_date">
-                    <label> Salary (gold coins) </label> <input type="text" name"salary_gold_coins">
+                    <label> First Name </label> <input type="text" name="first_name">
+                    <label> Last Name </label> <input type="text" name="last_name">
+                    <label> Height (in) </label> <input type="text" name="height_inches">
+                    <label> Weight (lb) </label> <input type="text" name="weight_lb">
+                    <label> Birth Date </label> <input type="text" name="birth_date">
+                    <label> Combat Ready </label> <input type="text" name="combat_ready">
+                    <label> Conscription Date </label> <input type="text" name="conscription_date">
+                    <label> Salary (gold coins) </label> <input type="text" name="salary_gold_coins">
                     <label> Vehicle </label> <select name="vehicle_id">
                         <option value="0">&nbsp;</option>
-                        <option value="1">Not A Unicorn</option>
-                        <option value="2">War Machine</option>
-                        <option value="3">Ice Cream Truck</option>
+                        {% for vehicle in vehicles %}
+                        <option value="{{ vehicle[0] }}">{{ vehicle[1] }}</option>
+                        {% endfor %}
                         </select>
                     <label> Job </label> <select name="job_id">
                         <option value="0">&nbsp;</option>
-                        <option value="1">Cook</option>
-                        <option value="2">Peon</option>
-                        <option value="3">Warlord</option>
+                        {% for job in jobs %}
+                        <option value="{{ job[0] }}">{{ job[1] }}</option>
+                        {% endfor %}
                         </select>
                 </fieldset>
                     <input class="btn" type="submit" id="addSaveOrc" value="Add Orc">
@@ -67,33 +67,33 @@
         <form method="POST" id="updateOrc">
             <legend><strong>Update Orc</strong></legend>
                 <fieldset class="fields">
-                <input type="hidden" name="orc_id" id=updateorcID" value="1">
+                <input type="hidden" name="orc_id" id="updateorcID" value="1">
                 <label> ID: </label> 1    
-                    <label> First Name </label> <input type="text" name"first_name" value="Orgrim">
-                    <label> Last Name </label> <input type="text" name"last_name" value="Warhammer">
-                    <label> Height (in) </label> <input type="text" name"height_inches" value=72>
-                    <label> Weight (lb) </label> <input type="text" name"weight_lb" value=265>
-                    <label> Birth Date </label> <input type="text" name"birth_date" value="1964-12-25">
-                    <label> Combat Ready </label> <input type="text" name"combat_ready" value=1>
-                    <label> Conscription Date </label> <input type="text" name"conscription_date" value="1982-04-20">
-                    <label> Salary (gold coins) </label> <input type="text" name"salary_gold_coins" value=12323490>
+                    <label> First Name </label> <input type="text" name="first_name" value="Orgrim">
+                    <label> Last Name </label> <input type="text" name="last_name" value="Warhammer">
+                    <label> Height (in) </label> <input type="text" name="height_inches" value=72>
+                    <label> Weight (lb) </label> <input type="text" name="weight_lb" value=265>
+                    <label> Birth Date </label> <input type="text" name="birth_date" value="1964-12-25">
+                    <label> Combat Ready </label> <input type="text" name="combat_ready" value=1>
+                    <label> Conscription Date </label> <input type="text" name="conscription_date" value="1982-04-20">
+                    <label> Salary (gold coins) </label> <input type="text" name="salary_gold_coins" value=12323490>
                     <label> Vehicle </label> <select name="vehicle_id" >
                         <option value="0">&nbsp;</option>
-                        <option value="1">Not A Unicorn</option>
-                        <option value="2" selected>War Machine</option>
-                        <option value="3">Ice Cream Truck</option>
+                        {% for vehicle in vehicles %}
+                        <option value="{{ vehicle[0] }}">{{ vehicle[1] }}</option>
+                        {% endfor %}
                         </select>
                     <label> Job </label> <select name="job_id">
                         <option value="0">&nbsp;</option>
-                        <option value="1">Cook</option>
-                        <option value="2">Peon</option>
-                        <option value="3" selected>Warlord</option>
+                        {% for job in jobs %}
+                        <option value="{{ job[0] }}">{{ job[1] }}</option>
+                        {% endfor %}
                         </select>
                 </fieldset>
                     <input class="btn" type="submit" id="updateSaveOrc" value="Update Orc">
         </form>
     </div>
-    <div id="delete" style="display: block>
+    <div id="delete" style="display: block">
         <form method="POST" id="deleteOrc">
             <legend><strong>Delete Orc</strong></legend>
                 <fieldset class="fields">

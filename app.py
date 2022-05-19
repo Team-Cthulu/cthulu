@@ -1,6 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, json
 from flask import request, redirect
-# from flask import MySQL
+from flask_mysqldb import MySQL
 from db_credentials import host, user, passwd, db
 from db_connector import connect_to_database, execute_query
 import os
@@ -9,11 +9,12 @@ import os
 
 app = Flask(__name__)
 
-# app.config['MYSQL_HOST'] = host
-# app.config['MYSQL_USER'] = user
-# app.config['MYSQL_PASSWORD'] = passwd
-# app.config['MYSQL_DB'] = db
-# mysql = MySQL(app)
+app.config['MYSQL_HOST'] = host
+app.config['MYSQL_USER'] = user
+app.config['MYSQL_PASSWORD'] = passwd
+app.config['MYSQL_DB'] = db
+mysql = MySQL(app)
+db_connection = connect_to_database()
 
 # Routes 
 @app.route('/')
@@ -44,10 +45,59 @@ def view_orc_items():
 def view_orc_skills():
     return render_template("orcHasSkills.j2", title="Orc Has Skills", orc_skills=orc_skills_info)
 
-@app.route('/orcs')
+@app.route('/orcs', methods=["POST","GET"])
 def view_orcs():
-    return render_template("orcs.j2", title="Orcs", orcs=orcs_info)
+    if request.method == "GET":
+        cursor = mysql.connection.cursor()
+        query = "SELECT job_id, title FROM Jobs;"
+        cursor.execute(query)
+        jobs_info = cursor.fetchall()
+        query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+        cursor.execute(query)
+        vehicles_info = cursor.fetchall()
+        query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.first_name, Orcs.height_inches, Orcs.weight_lb, \
+        Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
+        Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
+        LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
+        LEFT JOIN Vehicles ON Orcs.vehicle_id = Vehicles.vehicle_id;"
+        cursor.execute(query)
+        orcs_info = cursor.fetchall()
+        print(orcs_info)
+        return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
 
+    elif request.method == "POST":
+        # Add Orc to Orcs table
+        cursor = mysql.connection.cursor()
+        fname = request.form['first_name']
+        lname = request.form['last_name']
+        height = request.form['height_inches']
+        weight = request.form['weight_lb']
+        bdate = request.form['birth_date']
+        combat = request.form['combat_ready']
+        conscription = request.form['conscription_date']
+        salary = request.form['salary_gold_coins']
+        vehicle = request.form['vehicle_id']
+        job = request.form['job_id']
+        insert_query = query = 'INSERT INTO Orcs (first_name, last_name, height_inches, weight_lb, birth_date, combat_ready, conscription_date, salary_gold_coins, vehicle_id, job_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        data = (fname, lname, height, weight, bdate, combat, conscription, salary, vehicle, job)
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
+
+        # Add rows to intersection tables
+
+        # Update html
+        cursor = mysql.connection.cursor()
+        query = "SELECT job_id, title FROM Jobs;"
+        cursor.execute(query)
+        jobs_info = cursor.fetchall()
+        query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+        cursor.execute(query)
+        vehicles_info = cursor.fetchall()
+        query = "SELECT * FROM Orcs;"
+        cursor.execute(query)
+        orcs_info = cursor.fetchall()
+        print(orcs_info)
+        return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
 @app.route('/skills')
 def view_skills():
     return render_template("skills.j2", title="Skills", skills=skill_info)
@@ -61,7 +111,8 @@ def test_db_connection():
     print("Testing database using credentials from db_credentials.py")
     db_connection = connect_to_database()
     query = "SELECT * from Orcs;"
-    result = execute_query(db_connection_query)
+    cursor = execute_query(db_connection, query)
+    result = json.dumps(cursor.fetchall())
     return result
 
 # Listener
@@ -91,72 +142,6 @@ people_from_app_py = [
     "location": "Florida",
     "favorite_color": "Orange"
 }
-]
-
-orcs_info = [
-{
-    "orc_id": 1,
-    "first_name": "Orgrim",
-    "last_name": "Doomhammer",
-    "height_inches": 72,
-    "weight_lb": 265,
-    "birth_date": "1964-12-25",
-    "combat_ready": 1,
-    "conscription_date": "1982-04-20",
-    "salary_gold_coins": 12323490,
-    "vehicle_id": 2,
-    "job_id": 3
-},
-{
-    "orc_id": 2,
-    "first_name": "Little",
-    "last_name": "Peon",
-    "height_inches": 42,
-    "weight_lb": 56,
-    "birth_date": "2017-06-17",
-    "combat_ready": 0,
-    "conscription_date": "null",
-    "salary_gold_coins": 0,
-    "vehicle_id": "null",
-    "job_id": "null" 
-},
-{
-    "orc_id": 3,
-    "first_name": "Mother",
-    "last_name": "Theresa",
-    "height_inches": 62,
-    "weight_lb": 185,
-    "birth_date": "1956-11-17",
-    "combat_ready": 1,
-    "conscription_date": "1989-09-17",
-    "salary_gold_coins": 711,
-    "vehicle_id": 1,
-    "job_id": 1 
-}
-]
-
-vehicle_info = [
-    {
-        "vehicle_id": 1,
-        "vehicle_type": "not a unicorn",
-        "num_spikes": 1,
-        "color": "beige",
-        "manufacture_year": "2004"
-    },
-    {
-        "vehicle_id": 2,
-        "vehicle_type": "war machine",
-        "num_spikes": 42,
-        "color": "blood red",
-        "manufacture_year": "1998"
-    },
-    {
-        "vehicle_id": 3,
-        "vehicle_type": "ice cream truck",
-        "num_spikes": 7,
-        "color": "teal",
-        "manufacture_year": "1987"
-    }
 ]
 
 skill_info = [
