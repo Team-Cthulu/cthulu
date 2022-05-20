@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h2>Update Orc</h2>
+
+    <div id="update">
+        <form method="POST" id="updateOrc">
+            <legend><strong>Update Orc</strong></legend>
+                <fieldset class="fields">
+                <input type="hidden" name="orc_id" id="updateorcID" value="1">
+                <label> ID: </label> {{data[0][0]}}    
+                    <label> First Name </label> <input type="text" name="first_name" value={{data[0][1]}}>
+                    <label> Last Name </label> <input type="text" name="last_name" value={{data[0][2]}}>
+                    <label> Height (in) </label> <input type="text" name="height_inches" value={{data[0][3]}}>
+                    <label> Weight (lb) </label> <input type="text" name="weight_lb" value={{data[0][4]}}>
+                    <label> Birth Date </label> <input type="text" name="birth_date" value={{data[0][5]}}>
+                    <label> Combat Ready </label> <input type="text" name="combat_ready" value={{data[0][6]}}>
+                    <label> Conscription Date </label> <input type="text" name="conscription_date" value={{data[0][7]}}>
+                    <label> Salary (gold coins) </label> <input type="text" name="salary_gold_coins" value={{data[0][8]}}>
+                    <label> Vehicle </label> <select name="vehicle_id" >
+                        <option value={{data[0][9]}}></option>
+                        {% for vehicle in vehicles %}
+                        <option value="{{ vehicle[0] }}">{{ vehicle[1] }}</option>
+                        {% endfor %}
+                        </select>
+                    <label> Job </label> <select name="job_id">
+                        <option value={{data[0][10]}}></option>
+                        {% for job in jobs %}
+                        <option value="{{ job[0] }}">{{ job[1] }}</option>
+                        {% endfor %}
+                        </select>
+                </fieldset>
+                    <input class="btn" type="submit" id="updateSaveOrc" value="Update Orc">
+        </form>
+    </div>
+{% endblock %}

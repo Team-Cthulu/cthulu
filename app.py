@@ -106,6 +106,21 @@ def delete_orc(orc_id):
 
     return redirect("/orcs")
 
+@app.route("/edit_orc/<int:orc_id>", methods=["POST", "GET"])
+def edit_orc(orc_id):
+    if request.method == "GET":
+        query = "SELECT * FROm Orcs where orc_id = %s" % (orc_id)
+        cursor = mysql.connection.cursor()
+        cursor.execute(query)
+        data = cursor.fetchall()
+        query = "SELECT job_id, title FROM Jobs;"
+        cursor.execute(query)
+        jobs_info = cursor.fetchall()
+        query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+        cursor.execute(query)
+        vehicles_info = cursor.fetchall()
+        return render_template("edit_orc.j2", title="Edit Orc", data=data, jobs=jobs_info, vehicles=vehicles_info)
+
 @app.route('/skills')
 def view_skills():
     return render_template("skills.j2", title="Skills", skills=skill_info)
