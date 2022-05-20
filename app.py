@@ -55,7 +55,7 @@ def view_orcs():
         query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
         cursor.execute(query)
         vehicles_info = cursor.fetchall()
-        query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.first_name, Orcs.height_inches, Orcs.weight_lb, \
+        query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.last_name, Orcs.height_inches, Orcs.weight_lb, \
         Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
         Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
         LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
