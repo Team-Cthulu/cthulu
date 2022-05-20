@@ -1,6 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<div>
+    <form method="post" id="Search" action="" style="margin:auto;max-width=600px">
+        <input type="text" placeholder="Search for an Orc by name" name="orc_name">
+        <button type="submit" name="Search"><i class="fa fa-search"></i>Search</button>
+    </form>
+</div>
 <table class="center">
     <thead>
     <tr>
@@ -48,13 +54,13 @@
                     <label> Conscription Date </label> <input type="text" name="conscription_date">
                     <label> Salary (gold coins) </label> <input type="text" name="salary_gold_coins">
                     <label> Vehicle </label> <select name="vehicle_id">
-                        <option value="0">&nbsp;</option>
+                        <option value="">&nbsp;</option>
                         {% for vehicle in vehicles %}
                         <option value="{{ vehicle[0] }}">{{ vehicle[1] }}</option>
                         {% endfor %}
                         </select>
                     <label> Job </label> <select name="job_id">
-                        <option value="0">&nbsp;</option>
+                        <option value="">&nbsp;</option>
                         {% for job in jobs %}
                         <option value="{{ job[0] }}">{{ job[1] }}</option>
                         {% endfor %}

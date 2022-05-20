@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+    <div>
+        <form method="post" action="" style="margin:auto;max-width=600px">
+            <input type="text" placeholder="Search for an Orc by name" name="orc_name">
+            <button type="submit" name="Search" value="Search"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <table class="center">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Height (in)</th>
+            <th>Weight (lb)</th>
+            <th>Birth Date</th>
+            <th>Combat Ready</th>
+            <th>Conscription Date</th>
+            <th>Salary (gold coins)</th>
+            <th>Vehicle</th>
+            <th>Job</th>
+        </tr>
+        <tbody>
+        {% for item in orcs %}
+        <tr>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{item[2]}}</td>
+            <td>{{item[3]}}</td>
+            <td>{{item[4]}}</td>
+            <td>{{item[5]}}</td>
+            <td>{{item[6]}}</td>
+            <td>{{item[7]}}</td>
+            <td>{{item[8]}}</td>
+            <td>{{item[9]}}</td>
+            <td>{{item[10]}}</td>
+            <td><a href="edit_orc/{{item[0]}}" class="btn btn-default">Edit</a></td>
+            <td><a href="delete_orc/{{item[0]}}" class="btn btn-default">Delete</a></td>
+        </tr>
+        {% endfor %}
+        </table>
+
+{% endblock %}

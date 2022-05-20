@@ -66,36 +66,77 @@ def view_orcs():
         return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
 
     elif request.method == "POST":
-        # Add Orc to Orcs table
-        cursor = mysql.connection.cursor()
-        fname = request.form['first_name']
-        lname = request.form['last_name']
-        height = request.form['height_inches']
-        weight = request.form['weight_lb']
-        bdate = request.form['birth_date']
-        combat = request.form['combat_ready']
-        conscription = request.form['conscription_date']
-        salary = request.form['salary_gold_coins']
-        vehicle = request.form['vehicle_id']
-        job = request.form['job_id']
-        insert_query = query = 'INSERT INTO Orcs (first_name, last_name, height_inches, weight_lb, birth_date, combat_ready, conscription_date, salary_gold_coins, vehicle_id, job_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-        data = (fname, lname, height, weight, bdate, combat, conscription, salary, vehicle, job)
-        cursor.execute(insert_query, data)
-        mysql.connection.commit()
+        if request.form.get("Search"):
+            print("SEARCHING")
+            # name = request.form["orc_search"]
+            # cursor = mysql.connection.cursor()
+            # query = "SELECT job_id, title FROM Jobs;"
+            # cursor.execute(query)
+            # jobs_info = cursor.fetchall()
+            # query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+            # cursor.execute(query)
+            # vehicles_info = cursor.fetchall()
+            # query = "SELECT * FROM Orcs \
+            # WHERE first_name LIKE %s OR last_name LIKE %s;"
+            # # query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.last_name, Orcs.height_inches, Orcs.weight_lb, \
+            # # Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
+            # # Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
+            # # LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
+            # # LEFT JOIN Vehicles ON Orcs.vehicle_id = Vehicles.vehicle_id \
+            # # WHERE first_name LIKE %s OR last_name LIKE %s;"
+            # data = (name, name)
+            # cursor.execute(query, data)
+            # orcs_info = cursor.fetchall()
+            # print(orcs_info)
+            # return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
+        
+        # elif request.method == "POST":
+        else:
+            # Add Orc to Orcs table
+            cursor = mysql.connection.cursor()
+            fname = request.form['first_name']
+            lname = request.form['last_name']
+            height = request.form['height_inches']
+            weight = request.form['weight_lb']
+            bdate = request.form['birth_date']
+            combat = request.form['combat_ready']
+            conscription = request.form['conscription_date']
+            salary = request.form['salary_gold_coins']
+            vehicle = request.form['vehicle_id']
+            job = request.form['job_id']
+            if job == "" and vehicle == "":
+                insert_query = query = 'INSERT INTO Orcs (first_name, last_name, height_inches, weight_lb, birth_date, combat_ready, conscription_date, salary_gold_coins) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
+                data = (fname, lname, height, weight, bdate, combat, conscription, salary)
+                cursor.execute(insert_query, data)
+            if job == "":
+                insert_query = query = 'INSERT INTO Orcs (first_name, last_name, height_inches, weight_lb, birth_date, combat_ready, conscription_date, salary_gold_coins, vehicle_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                data = (fname, lname, height, weight, bdate, combat, conscription, salary, vehicle)
+                cursor.execute(insert_query, data)
+                
+            if vehicle == "":
+                insert_query = query = 'INSERT INTO Orcs (first_name, last_name, height_inches, weight_lb, birth_date, combat_ready, conscription_date, salary_gold_coins, job_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                data = (fname, lname, height, weight, bdate, combat, conscription, salary, job)
+                cursor.execute(insert_query, data)
 
-        # Update html
-        cursor = mysql.connection.cursor()
-        query = "SELECT job_id, title FROM Jobs;"
-        cursor.execute(query)
-        jobs_info = cursor.fetchall()
-        query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
-        cursor.execute(query)
-        vehicles_info = cursor.fetchall()
-        query = "SELECT * FROM Orcs;"
-        cursor.execute(query)
-        orcs_info = cursor.fetchall()
-        print(orcs_info)
-        return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
+            else:
+                insert_query = query = 'INSERT INTO Orcs (first_name, last_name, height_inches, weight_lb, birth_date, combat_ready, conscription_date, salary_gold_coins, vehicle_id, job_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                data = (fname, lname, height, weight, bdate, combat, conscription, salary, vehicle, job)
+                cursor.execute(insert_query, data)
+            mysql.connection.commit()
+
+            # Update html
+            cursor = mysql.connection.cursor()
+            query = "SELECT job_id, title FROM Jobs;"
+            cursor.execute(query)
+            jobs_info = cursor.fetchall()
+            query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+            cursor.execute(query)
+            vehicles_info = cursor.fetchall()
+            query = "SELECT * FROM Orcs;"
+            cursor.execute(query)
+            orcs_info = cursor.fetchall()
+            print(orcs_info)
+            return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
 
 @app.route('/delete_orc/<int:orc_id>')
 def delete_orc(orc_id):
@@ -154,6 +195,29 @@ def edit_orc(orc_id):
         
         return redirect("/orcs")
 
+@app.route('/search', methods= ["GET", "POST"])
+def search():
+    if request.method == "POST":
+        name = request.form["orc_name"]
+        cursor = mysql.connection.cursor()
+        query = "SELECT job_id, title FROM Jobs;"
+        cursor.execute(query)
+        jobs_info = cursor.fetchall()
+        query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+        cursor.execute(query)
+        vehicles_info = cursor.fetchall()
+        query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.last_name, Orcs.height_inches, Orcs.weight_lb, \
+        Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
+        Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
+        LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
+        LEFT JOIN Vehicles ON Orcs.vehicle_id = Vehicles.vehicle_id \
+        WHERE first_name LIKE %s OR last_name LIKE %s;"
+        data = (name, name)
+        cursor.execute(query, data)
+        orcs_info = cursor.fetchall()
+        print(orcs_info)
+        return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
+    return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
 @app.route('/skills')
 def view_skills():
     return render_template("skills.j2", title="Skills", skills=skill_info)
