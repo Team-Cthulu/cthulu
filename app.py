@@ -83,8 +83,6 @@ def view_orcs():
         cursor.execute(insert_query, data)
         mysql.connection.commit()
 
-        # Add rows to intersection tables
-
         # Update html
         cursor = mysql.connection.cursor()
         query = "SELECT job_id, title FROM Jobs;"
@@ -98,6 +96,16 @@ def view_orcs():
         orcs_info = cursor.fetchall()
         print(orcs_info)
         return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
+
+@app.route('/delete_orc/<int:orc_id>')
+def delete_orc(orc_id):
+    query = "DELETE FROM Orcs WHERE orc_id = %s;"
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, (orc_id,))
+    mysql.connection.commit()
+
+    return redirect("/orcs")
+
 @app.route('/skills')
 def view_skills():
     return render_template("skills.j2", title="Skills", skills=skill_info)

@@ -31,7 +31,7 @@
         <td>{{item[9]}}</td>
         <td>{{item[10]}}</td>
         <td><a href="#">Edit</a></td>
-        <td><a href="#">Delete</a></td>
+        <td><a href="delete_orc/{{item[0]}}" class="btn btn-default">Delete</a></td>
     </tr>
     {% endfor %}
     </table>
@@ -94,7 +94,7 @@
         </form>
     </div>
     <div id="delete" style="display: block">
-        <form method="POST" id="deleteOrc">
+        <form method="DELETE" id="deleteOrc">
             <legend><strong>Delete Orc</strong></legend>
                 <fieldset class="fields">
                 <p>WAAAGH?</p>
