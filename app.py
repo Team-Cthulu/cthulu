@@ -121,6 +121,39 @@ def edit_orc(orc_id):
         vehicles_info = cursor.fetchall()
         return render_template("edit_orc.j2", title="Edit Orc", data=data, jobs=jobs_info, vehicles=vehicles_info)
 
+    if request.method == "POST":
+        if request.form.get("Edit_Orc"):
+            orc_id = request.form['orc_id']
+            fname = request.form['first_name']
+            lname = request.form['last_name']
+            height = request.form['height_inches']
+            weight = request.form['weight_lb']
+            bdate = request.form['birth_date']
+            combat = request.form['combat_ready']
+            conscription = request.form['conscription_date']
+            salary = request.form['salary_gold_coins']
+            vehicle = request.form['vehicle_id']
+            job = request.form['job_id']
+            query = "UPDATE Orcs SET \
+            first_name = %s, \
+            last_name = %s, \
+            height_inches = %s, \
+            weight_lb = %s, \
+            birth_date = %s, \
+            combat_ready = %s, \
+            conscription_date = %s, \
+            salary_gold_coins = %s, \
+            vehicle_id = %s, \
+            job_id = %s \
+            WHERE Orcs.orc_id = %s;"
+            data = (fname, lname, height, weight, bdate, \
+            combat, conscription, salary, vehicle, job, orc_id)
+            cursor = mysql.connection.cursor()
+            cursor.execute(query, data)
+            mysql.connection.commit()
+        
+        return redirect("/orcs")
+
 @app.route('/skills')
 def view_skills():
     return render_template("skills.j2", title="Skills", skills=skill_info)

@@ -1,13 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <h2>Update Orc</h2>
-
     <div id="update">
         <form method="POST" id="updateOrc">
             <legend><strong>Update Orc</strong></legend>
                 <fieldset class="fields">
-                <input type="hidden" name="orc_id" id="updateorcID" value="1">
+                <input type="hidden" name="orc_id" id="updateorcID" value={{data[0][0]}}>
                 <label> ID: </label> {{data[0][0]}}    
                     <label> First Name </label> <input type="text" name="first_name" value={{data[0][1]}}>
                     <label> Last Name </label> <input type="text" name="last_name" value={{data[0][2]}}>
@@ -30,7 +28,7 @@
                         {% endfor %}
                         </select>
                 </fieldset>
-                    <input class="btn" type="submit" id="updateSaveOrc" value="Update Orc">
+                    <input class="btn" type="submit" id="updateSaveOrc" name="Edit_Orc" value="Update Orc">
         </form>
     </div>
 {% endblock %}
