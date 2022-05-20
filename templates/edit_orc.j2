@@ -16,15 +16,23 @@
                     <label> Conscription Date </label> <input type="text" name="conscription_date" value={{data[0][7]}}>
                     <label> Salary (gold coins) </label> <input type="text" name="salary_gold_coins" value={{data[0][8]}}>
                     <label> Vehicle </label> <select name="vehicle_id" >
-                        <option value={{data[0][9]}}></option>
+                        <option value="0">&nbsp;</option>
                         {% for vehicle in vehicles %}
-                        <option value="{{ vehicle[0] }}">{{ vehicle[1] }}</option>
+                            {% if vehicle[0] == data[0][9] %}
+                                <option value="{{vehicle[0]}}" selected>{{ vehicle[1] }}</option>
+                            {% else %}
+                                <option value="{{vehicle[0]}}">{{vehicle[1]}}</option>
+                            {% endif %}
                         {% endfor %}
                         </select>
                     <label> Job </label> <select name="job_id">
-                        <option value={{data[0][10]}}></option>
+                        <option value="0">&nbsp;</option>
                         {% for job in jobs %}
-                        <option value="{{ job[0] }}">{{ job[1] }}</option>
+                            {% if job[0] == data[0][10] %}
+                                <option value="{{job[0]}}" selected>{{ job[1] }}</option>
+                            {% else %}
+                                <option value="{{job[0]}}">{{job[1]}}</option>
+                            {% endif %}
                         {% endfor %}
                         </select>
                 </fieldset>
