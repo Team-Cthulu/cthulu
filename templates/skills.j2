@@ -1,6 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<div>
+    <form method="post" id="Search" action="" style="margin:auto;max-width=600px">
+        <input type="text" placeholder="Search for a Skill" name="skill_name">
+        <button type="submit" name="Search"><i class="fa fa-search"></i>Search</button>
+    </form>
+</div>
 <table class="center">
     <thead>
     <tr>
@@ -12,6 +18,8 @@
     <tr>
         <td>{{item['skill_id']}}</td>
         <td>{{item['skill_name']}}</td>
+        <td><a href="edit_orc/{{item[0]}}" class="btn btn-default">Edit</a></td>
+        <td><a href="delete_orc/{{item[0]}}" class="btn btn-default">Delete</a></td>
     </tr>
     {% endfor %}
     </table>
