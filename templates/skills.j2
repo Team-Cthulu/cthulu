@@ -16,20 +16,43 @@
     <tbody>
     {% for item in skills %}
     <tr>
-        <td>{{item['skill_id']}}</td>
-        <td>{{item['skill_name']}}</td>
-        <td><a href="edit_orc/{{item[0]}}" class="btn btn-default">Edit</a></td>
-        <td><a href="delete_orc/{{item[0]}}" class="btn btn-default">Delete</a></td>
+        <td>{{item[0]}}</td>
+        <td>{{item[1]}}</td>
+        <td><a href="edit_skill/{{item[0]}}" class="btn btn-default">Edit</a></td>
+        <td><a href="delete_skill/{{item[0]}}" class="btn btn-default">Delete</a></td>
     </tr>
     {% endfor %}
     </table>
-    <div>
+     <div id="add">
         <form method="POST" id="addSkill">
             <legend><strong>Add Skill</strong></legend>
                 <fieldset class="fields">
-                    <label> Name </label> <input type="text" name"skill_name">
+                    <label> Skill Name </label> <input type="text" name="skill_name">
                 </fieldset>
-                    <input class="btn" type="submit" id="addSkill" value="Add Skill">
+                    <input class="btn" type="submit" id="addSaveSkill" value="Add Skill">
+        </form>
+    </div>
+    <div id="update">
+        <form method="POST" id="updateSkill">
+            <legend><strong>Update Skill</strong></legend>
+                <fieldset class="fields">
+                <input type="hidden" name="orc_id" id="updateorcID" value="1">
+                <label> ID: </label> 1    
+                    <label> Skill Name </label> <input type="text" name="skill_name" value="Welding">
+                </fieldset>
+                    <input class="btn" type="submit" id="updateSaveSkill" value="Update Skill">
+        </form>
+    </div>
+    <div id="delete" style="display: block">
+        <form method="DELETE" id="deleteSkill">
+            <legend><strong>Delete Skill</strong></legend>
+                <fieldset class="fields">
+                <p>WAAAGH?</p>
+                <input type="hidden" name="orc_id" id="deleteskillID" value="1">
+                <label><strong>ID: </strong></label> 1
+                    <label><strong>Name</strong></label> Orgrim Warhammer
+            </fieldset>
+            <input class="btn" type="submit" id="DeleteSkill" value="Delete Skill">
         </form>
     </div>
 {% endblock%}
