@@ -251,8 +251,8 @@ def view_skills():
         skill_info = cursor.fetchall()
         query = "SELECT skill_id, skill_name FROM Skills;"
         cursor.execute(query)
-        orcs_info = cursor.fetchall()
-        print(orcs_info)
+        skill_info = cursor.fetchall()
+        print(skill_info)
         return render_template("skills.j2", title="Skills", skills=skill_info)
 
     elif request.method == "POST":
