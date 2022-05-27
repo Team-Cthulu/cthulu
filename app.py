@@ -312,6 +312,7 @@ def edit_skill(skill_id):
             skill_id = request.form['skill_id']
             skillname = request.form['skill_name']
             query = "UPDATE Skills SET \
+            skill_name = %s \
             WHERE Skills.skill_id = %s;"
             data = (skillname, skill_id)
             cursor = mysql.connection.cursor()
