@@ -243,43 +243,38 @@ def test_db_connection():
 
 @app.route('/skills', methods=["POST","GET"])
 def view_skills():
-    if request.method == "GET":
-        cursor = mysql.connection.cursor()
-        query = "SELECT skill_id, skill_name FROM Skills;"
-        cursor.execute(query)
+    # if request.method == "GET":
+       # cursor = mysql.connection.cursor()
+        #query = "SELECT skill_id, skill_name FROM Skills;"
+        #cursor.execute(query)
 
-        skill_info = cursor.fetchall()
-        query = "SELECT skill_id, skill_name FROM Skills;"
-        cursor.execute(query)
-        skill_info = cursor.fetchall()
-        print(skill_info)
-        return render_template("skills.j2", title="Skills", skills=skill_info)
+        #skill_info = cursor.fetchall()
+        #query = "SELECT skill_id, skill_name FROM Skills;"
+        #cursor.execute(query)
+        #skill_info = cursor.fetchall()
+        #print(skill_info)
+        #return render_template("skills.j2", title="Skills", skills=skill_info)
 
-    elif request.method == "POST":
-        if request.form.get("Search"):
-            print("SEARCHING")
+    #elif request.method == "POST":
+        #if request.form.get("Search"):
+           # print("SEARCHING")
 
-        else:
+        #else:
             cursor = mysql.connection.cursor()
-            skill_id = request.form['skill_id']
-            skill_name = request.form['skill_name']
-            if skill_name == "":
-                insert_query = query = 'INSERT INTO Skills (skill_id) VALUES (%s)'
-                data = (skill_id)
-                cursor.execute(insert_query, data)
-            if skill_id == "":
-                insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
-                data = (skill_id)
-                cursor.execute(insert_query, data)
-            else:
-                insert_query = query = 'INSERT INTO Skills (skill_id, skill_name) VALUES (%s, %s)'
-                data = (skill_id, skill_name)
-                cursor.execute(insert_query, data)
+            sname = request.form['skill_name']
+            # if sname == "":
+            insert_query = query = 'INSERT INTO Skills (skill_id) VALUES (%s)'
+            data = (sname)
+            cursor.execute(insert_query, data)
+            #else:
+                #insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
+               # data = (sname)
+               # cursor.execute(insert_query, data)
             mysql.connection.commit()
 
             # Update html
             cursor = mysql.connection.cursor()
-            query = "SELECT skill_id, skill_name FROM Skills;"
+            query = "SELECT * FROM Skills;"
             cursor.execute(query)
             skill_info = cursor.fetchall()
             print(skill_info)
@@ -320,6 +315,21 @@ def edit_skill(skill_id):
             mysql.connection.commit()
         
         return redirect("/skills")
+
+############ Orc Has Skills ##############################################
+
+
+
+############## Orc Has Skills (Delete) #####################
+
+@app.route('/delete_OrchasSkills/<int:orc_skill_id>')
+def delete_OrchasSkills(orc_skill_id):
+    query = "DELETE FROM Orc_has_Skills WHERE orc_skill_id = %s;"
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, (orc_skill_id,))
+    mysql.connection.commit()
+
+    return redirect("/orc_has_skills")
 
 # Listener
 
