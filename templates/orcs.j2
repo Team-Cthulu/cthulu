@@ -106,7 +106,26 @@
                 <p>WAAAGH?</p>
                 <input type="hidden" name="orc_id" id="deleteorcID" value="1">
                 <label><strong>ID: </strong></label> 1
-                    <label><strong>Name</strong></label> Orgrim Warhammer
+                    <label> First Name </label> <input type="text" name="first_name" value="Orgrim">
+                    <label> Last Name </label> <input type="text" name="last_name" value="Warhammer">
+                    <label> Height (in) </label> <input type="text" name="height_inches" value=72>
+                    <label> Weight (lb) </label> <input type="text" name="weight_lb" value=265>
+                    <label> Birth Date </label> <input type="text" name="birth_date" value="1964-12-25">
+                    <label> Combat Ready </label> <input type="text" name="combat_ready" value=1>
+                    <label> Conscription Date </label> <input type="text" name="conscription_date" value="1982-04-20">
+                    <label> Salary (gold coins) </label> <input type="text" name="salary_gold_coins" value=12323490>
+                    <label> Vehicle </label> <select name="vehicle_id" >
+                        <option value="0">&nbsp;</option>
+                        {% for vehicle in vehicles %}
+                        <option value="{{ vehicle[0] }}">{{ vehicle[1] }}</option>
+                        {% endfor %}
+                        </select>
+                    <label> Job </label> <select name="job_id">
+                        <option value="0">&nbsp;</option>
+                        {% for job in jobs %}
+                        <option value="{{ job[0] }}">{{ job[1] }}</option>
+                        {% endfor %}
+                        </select>
             </fieldset>
             <input class="btn" type="submit" id="DeleteOrc" value="Delete Orc">
         </form>

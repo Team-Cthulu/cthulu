@@ -27,7 +27,8 @@
         <form method="POST" id="addSkill">
             <legend><strong>Add Skill</strong></legend>
                 <fieldset class="fields">
-                    <label> Skill Name </label> <input type="text" name="skill_name">
+                <label> ID: </label> <input type="text" name="skill_id" value="1">
+                <label> Skill Name </label> <input type="text" name="skill_name" value="Add Skill">
                 </fieldset>
                     <input class="btn" type="submit" id="addSaveSkill" value="Add Skill">
         </form>
@@ -37,8 +38,8 @@
             <legend><strong>Update Skill</strong></legend>
                 <fieldset class="fields">
                 <input type="hidden" name="orc_id" id="updateorcID" value="1">
-                <label> ID: </label> 1    
-                    <label> Skill Name </label> <input type="text" name="skill_name" value="Welding">
+                <label> ID: </label> <input type="text" name="skill_id" value="1">
+                <label> Skill Name </label> <input type="text" name="skill_name" value="Update Skill">
                 </fieldset>
                     <input class="btn" type="submit" id="updateSaveSkill" value="Update Skill">
         </form>
@@ -47,10 +48,9 @@
         <form method="DELETE" id="deleteSkill">
             <legend><strong>Delete Skill</strong></legend>
                 <fieldset class="fields">
-                <p>WAAAGH?</p>
+                <label> ID: </label> <input type="text" name="skill_id" value="1">
+                <label> Skill Name </label> <input type="text" name="skill_name" value="Delete Skill">
                 <input type="hidden" name="orc_id" id="deleteskillID" value="1">
-                <label><strong>ID: </strong></label> 1
-                    <label><strong>Name</strong></label> Orgrim Warhammer
             </fieldset>
             <input class="btn" type="submit" id="DeleteSkill" value="Delete Skill">
         </form>
