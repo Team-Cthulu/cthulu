@@ -1,3 +1,4 @@
+from sqlite3 import Cursor
 from flask import Flask, render_template, json
 from flask import request, redirect
 from flask_mysqldb import MySQL
@@ -243,38 +244,38 @@ def test_db_connection():
 
 @app.route('/skills', methods=["POST","GET"])
 def view_skills():
-    # if request.method == "GET":
-       # cursor = mysql.connection.cursor()
-        #query = "SELECT skill_id, skill_name FROM Skills;"
-        #cursor.execute(query)
+    if request.method == "GET":
+        cursor = mysql.connection.cursor()
+        query = "SELECT skill_id, skill_name FROM Skills;"
+        cursor.execute(query)
 
-        #skill_info = cursor.fetchall()
-        #query = "SELECT skill_id, skill_name FROM Skills;"
-        #cursor.execute(query)
-        #skill_info = cursor.fetchall()
-        #print(skill_info)
-        #return render_template("skills.j2", title="Skills", skills=skill_info)
+        skill_info = cursor.fetchall()
+        query = "SELECT skill_id, skill_name FROM Skills;"
+        cursor.execute(query)
+        skill_info = cursor.fetchall()
+        print(skill_info)
+        return render_template("skills.j2", title="Skills", skills=skill_info)
 
-    #elif request.method == "POST":
-        #if request.form.get("Search"):
-           # print("SEARCHING")
+    elif request.method == "POST":
+        if request.form.get("Search"):
+            print("SEARCHING")
 
-        #else:
+        else:
             cursor = mysql.connection.cursor()
-            sname = request.form['skill_name']
-            # if sname == "":
-            insert_query = query = 'INSERT INTO Skills (skill_id) VALUES (%s)'
-            data = (sname)
-            cursor.execute(insert_query, data)
-            #else:
-                #insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
-               # data = (sname)
-               # cursor.execute(insert_query, data)
+            skill_name = request.form['skill_name']
+            if z == "":
+                insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
+                data = (skill_name)
+                cursor.execute(insert_query, data)
+            else:
+                insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
+                data = (skill_name)
+                cursor.execute(insert_query, data)
             mysql.connection.commit()
 
             # Update html
             cursor = mysql.connection.cursor()
-            query = "SELECT * FROM Skills;"
+            query = "SELECT skill_id, skill_name FROM Skills;"
             cursor.execute(query)
             skill_info = cursor.fetchall()
             print(skill_info)
@@ -316,20 +317,57 @@ def edit_skill(skill_id):
         
         return redirect("/skills")
 
-############ Orc Has Skills ##############################################
+############## Orc Has Skills #####################
 
 
 
 ############## Orc Has Skills (Delete) #####################
 
-@app.route('/delete_OrchasSkills/<int:orc_skill_id>')
-def delete_OrchasSkills(orc_skill_id):
-    query = "DELETE FROM Orc_has_Skills WHERE orc_skill_id = %s;"
+@app.route("/delete_OrchasSkills/<int:skill_id>")
+def delete_OrchasSkills(skill_id):
+    query = "DELETE FROM Orc_has_Skills WHERE skill_id = '%s';"
     cursor = mysql.connection.cursor()
-    cursor.execute(query, (orc_skill_id,))
+    cursor.execute(query, (skill_id,))
     mysql.connection.commit()
 
-    return redirect("/orc_has_skills")
+    return redirect("/orchasskills")
+
+############## Orc Has Skills (Edit) #####################
+
+@app.route("/edit_OrchasSkills/<int:orc_Id>", methods=["POST", "GET"])
+def edit_OrchasSkills(orc_id):
+    if request.method == "GET":
+        query = "SELECT * FROM Orc_has_Skills where orc_id = %s" % (orc_id)
+        cursor = mysql.connection.cursor()
+        cursor.execute(query)
+        data = cursor.fetchall()
+        return render_template("edit_OrchasSkills.j2", title="Edit Orc has Skills", data=data, orcskills=orc_skills_info)
+
+    if request.method == "POST":
+        if request.form.get("Edit_Orc_Has_Skill"):
+            skill_id = request.form['skill_id']
+            skilllevel = request.form['skill_level']
+            query = "UPDATE Orc_has_Skills SET \
+            skill_id = %s \
+            skill_level = %s \
+            WHERE Orc_has_Skills.skill_level = %s;"
+            data = (skill_id, skill_level)
+            cursor = mysql.connection.cursor()
+            cursor.execute(query, data)
+            mysql.connection.commit()
+        
+        return redirect("/orchasskills")
+
+############## Items (Delete) #####################
+
+@app.route('/delete_item/<int:item_id>')
+def delete_item(item_id):
+    query = "DELETE FROM Items WHERE item_id = %s;"
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, (item_id,))
+    mysql.connection.commit()
+
+    return redirect("/items")
 
 # Listener
 
@@ -442,6 +480,31 @@ job_info = [
     },
 ]
 
+vehicle_info = [
+    {
+        "vehicle_id": 1,
+        "vehicle_type": "Elephant",
+        "num_spikes": 14,
+        "color": "Gray",
+        "manufacture_year": 1511
+    },
+    {
+        "vehicle_id": 2,
+        "vehicle_type": "Horse",
+        "num_spikes": 3,
+        "color": "White",
+        "manufacture_year": 1213
+    },
+    {
+        "vehicle_id": 3,
+        "vehicle_type": "Tank",
+        "num_spikes": 10,
+        "color": "Black",
+        "manufacture_year": 3211 
+    },
+]
+
+
 orc_items_info = [
     {
         "orc_item_id": 1,
@@ -497,10 +560,11 @@ orc_skills_info = [
     },
 ]
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 61422)) 
+    # port = int(os.environ.get('PORT', 61107)) 
     #                                 ^^^^
     #              You can replace this number with any valid port
-    
-    app.run(port=port) 
+    app.run(debug=True) 
+
+    # app.run(port=port) 
 
 #minor test to see if this works
