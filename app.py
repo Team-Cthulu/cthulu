@@ -226,10 +226,63 @@ def search():
         return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
     return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
 
+########################## Vehicles ################################
 
 @app.route('/vehicles')
 def view_vehicles():
     return render_template("vehicles.j2", title="Vehicles", vehicles=vehicle_info)
+
+@app.route('/vehicles', methods=["POST","GET"])
+def view_skills():
+    if request.method == "GET":
+        cursor = mysql.connection.cursor()
+        query = "SELECT vehicle_id, vehicle_type, num_spikes, color, manufacture_year FROM Vehicles;"
+        cursor.execute(query)
+
+        skill_info = cursor.fetchall()
+        query = "SELECT vehicle_id, vehicle_type, num_spikes, color, manufacture_year FROM Vehicles;"
+        cursor.execute(query)
+        skill_info = cursor.fetchall()
+        print(skill_info)
+        return render_template("vehicles.j2", title="Vehicles", skills=vehicle_info)
+
+    elif request.method == "POST":
+        if request.form.get("Search"):
+            print("SEARCHING")
+
+        else:
+            cursor = mysql.connection.cursor()
+            skill_name = request.form['vehicle_type']
+            if skill_name == "":
+                insert_query = query = 'INSERT INTO Vehicles (vehicle_type) VALUES (%s)'
+                data = (skill_name)
+                cursor.execute(insert_query, data)
+            else:
+                insert_query = query = 'INSERT INTO Vehicles (vehicle_type) VALUES (%s)'
+                data = (skill_name)
+                cursor.execute(insert_query, data)
+            mysql.connection.commit()
+
+            # Update html
+            cursor = mysql.connection.cursor()
+            query = "SELECT skill_id, skill_name FROM Skills;"
+            cursor.execute(query)
+            skill_info = cursor.fetchall()
+            print(skill_info)
+            return render_template("skills.j2", title="Skills", skills=skill_info)
+
+######################### DELETE VEHICLE #################################
+
+@app.route('/delete_vehicle/<int:vehicle_id>')
+def delete_orc(orc_id):
+    query = "DELETE FROM Vehicles WHERE vehicle_id = %s;"
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, (vehicle_id,))
+    mysql.connection.commit()
+
+    return redirect("/vehicles")
+
+###################### DB TEST #######################################
 
 @app.route('/db-test')
 def test_db_connection():
@@ -263,7 +316,7 @@ def view_skills():
         else:
             cursor = mysql.connection.cursor()
             skill_name = request.form['skill_name']
-            if z == "":
+            if skill_name == "":
                 insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
                 data = (skill_name)
                 cursor.execute(insert_query, data)
