@@ -1,7 +1,8 @@
 from sqlite3 import Cursor
 from flask import Flask, render_template, json
-from flask import request, redirect
+from flask import flash, request, redirect
 from flask_mysqldb import MySQL
+from forms import OrcSearchForm
 from db_credentials import host, user, passwd, db
 from db_connector import connect_to_database, execute_query
 import os
@@ -14,6 +15,7 @@ app.config['MYSQL_HOST'] = host
 app.config['MYSQL_USER'] = user
 app.config['MYSQL_PASSWORD'] = passwd
 app.config['MYSQL_DB'] = db
+app.config['SECRET_KEY'] = 'super secret string'
 mysql = MySQL(app)
 db_connection = connect_to_database()
 
@@ -47,12 +49,16 @@ def view_orc_skills():
     return render_template("orcHasSkills.j2", title="Orc Has Skills", orc_skills=orc_skills_info)
 
 ##################### Orcs ############################
-# Insert
+# Search
+# @app.route('/search', methods=["POST"])
+# def search_orcs():
 
+# Insert
 @app.route('/orcs', methods=["POST","GET"])
 def view_orcs():
+    search = OrcSearchForm(request.form)
+    cursor = mysql.connection.cursor()
     if request.method == "GET":
-        cursor = mysql.connection.cursor()
         query = "SELECT job_id, title FROM Jobs;"
         cursor.execute(query)
         jobs_info = cursor.fetchall()
@@ -67,37 +73,38 @@ def view_orcs():
         cursor.execute(query)
         orcs_info = cursor.fetchall()
         print(orcs_info)
-        return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
+        return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info, search=search)
 
     elif request.method == "POST":
-        if request.form.get("Search"):
-            print("SEARCHING")
-            # name = request.form["orc_search"]
-            # cursor = mysql.connection.cursor()
-            # query = "SELECT job_id, title FROM Jobs;"
-            # cursor.execute(query)
-            # jobs_info = cursor.fetchall()
-            # query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
-            # cursor.execute(query)
-            # vehicles_info = cursor.fetchall()
-            # query = "SELECT * FROM Orcs \
-            # WHERE first_name LIKE %s OR last_name LIKE %s;"
-            # # query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.last_name, Orcs.height_inches, Orcs.weight_lb, \
-            # # Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
-            # # Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
-            # # LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
-            # # LEFT JOIN Vehicles ON Orcs.vehicle_id = Vehicles.vehicle_id \
-            # # WHERE first_name LIKE %s OR last_name LIKE %s;"
-            # data = (name, name)
-            # cursor.execute(query, data)
-            # orcs_info = cursor.fetchall()
-            # print(orcs_info)
-            # return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
-        
-        # elif request.method == "POST":
+        if search.name.data:
+            print("Searching for name")
+            print(search.name)
+            orc_name = request.form[search.query.name]
+            query = "SELECT job_id, title FROM Jobs;"
+            cursor.execute(query)
+            jobs_info = cursor.fetchall()
+            query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+            cursor.execute(query)
+            vehicles_info = cursor.fetchall()
+            query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.last_name, Orcs.height_inches, Orcs.weight_lb, \
+            Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
+            Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
+            LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
+            LEFT JOIN Vehicles ON Orcs.vehicle_id = Vehicles.vehicle_id \
+            WHERE Orcs.first_name LIKE %s OR Orcs.last_name LIKE %s;"
+            data = (orc_name, orc_name)
+            cursor.execute(query, data)
+            orcs_info = cursor.fetchall()
+            if orcs_info == ():
+                flash('No orcs found')
+                return redirect("/orcs")
+            print(orcs_info)
+            return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info, search=search)
+        elif search.reset.data:
+            print("Resetting table")
+            return redirect("/orcs")
         else:
             # Add Orc to Orcs table
-            cursor = mysql.connection.cursor()
             fname = request.form['first_name']
             lname = request.form['last_name']
             height = request.form['height_inches']
@@ -128,19 +135,19 @@ def view_orcs():
                 cursor.execute(insert_query, data)
             mysql.connection.commit()
 
-            # Update html
-            cursor = mysql.connection.cursor()
-            query = "SELECT job_id, title FROM Jobs;"
-            cursor.execute(query)
-            jobs_info = cursor.fetchall()
-            query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
-            cursor.execute(query)
-            vehicles_info = cursor.fetchall()
-            query = "SELECT * FROM Orcs;"
-            cursor.execute(query)
-            orcs_info = cursor.fetchall()
-            print(orcs_info)
-            return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info)
+        # Update html
+        cursor = mysql.connection.cursor()
+        query = "SELECT job_id, title FROM Jobs;"
+        cursor.execute(query)
+        jobs_info = cursor.fetchall()
+        query = "SELECT vehicle_id, vehicle_type FROM Vehicles;"
+        cursor.execute(query)
+        vehicles_info = cursor.fetchall()
+        query = "SELECT * FROM Orcs;"
+        cursor.execute(query)
+        orcs_info = cursor.fetchall()
+        print(orcs_info)
+        return render_template("orcs.j2", title="Orcs", orcs=orcs_info, vehicles=vehicles_info, jobs=jobs_info, search=search)
 
 ########### DELETE ORC #################
 @app.route('/delete_orc/<int:orc_id>')

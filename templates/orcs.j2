@@ -2,9 +2,26 @@
 
 {% block body %}
 <div>
-    <form method="post" id="Search" action="" style="margin:auto;max-width=600px">
-        <input type="text" placeholder="Search for an Orc by name" name="orc_name">
-        <button type="submit" name="Search"><i class="fa fa-search"></i>Search</button>
+    {% from "_formhelpers.j2" import render_field %}
+    <form method="post" id="orc_search" style="margin:auto;max-width=600px">
+        <div>
+        {{ render_field(search.query) }}
+        </div>
+        <div>
+        {{ search.name }}
+        {{ search.reset }}
+        </div>
+        <div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        </div>
     </form>
 </div>
 <table class="center">
@@ -67,36 +84,6 @@
                         </select>
                 </fieldset>
                     <input class="btn" type="submit" id="addSaveOrc" value="Add Orc">
-        </form>
-    </div>
-    <div id="update">
-        <form method="POST" id="updateOrc">
-            <legend><strong>Update Orc</strong></legend>
-                <fieldset class="fields">
-                <input type="hidden" name="orc_id" id="updateorcID" value="1">
-                <label> ID: </label> 1    
-                    <label> First Name </label> <input type="text" name="first_name" value="Orgrim">
-                    <label> Last Name </label> <input type="text" name="last_name" value="Warhammer">
-                    <label> Height (in) </label> <input type="text" name="height_inches" value=72>
-                    <label> Weight (lb) </label> <input type="text" name="weight_lb" value=265>
-                    <label> Birth Date </label> <input type="text" name="birth_date" value="1964-12-25">
-                    <label> Combat Ready </label> <input type="text" name="combat_ready" value=1>
-                    <label> Conscription Date </label> <input type="text" name="conscription_date" value="1982-04-20">
-                    <label> Salary (gold coins) </label> <input type="text" name="salary_gold_coins" value=12323490>
-                    <label> Vehicle </label> <select name="vehicle_id" >
-                        <option value="0">&nbsp;</option>
-                        {% for vehicle in vehicles %}
-                        <option value="{{ vehicle[0] }}">{{ vehicle[1] }}</option>
-                        {% endfor %}
-                        </select>
-                    <label> Job </label> <select name="job_id">
-                        <option value="0">&nbsp;</option>
-                        {% for job in jobs %}
-                        <option value="{{ job[0] }}">{{ job[1] }}</option>
-                        {% endfor %}
-                        </select>
-                </fieldset>
-                    <input class="btn" type="submit" id="updateSaveOrc" value="Update Orc">
         </form>
     </div>
     <div id="delete" style="display: block">
