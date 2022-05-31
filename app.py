@@ -228,12 +228,8 @@ def search():
 
 ########################## Vehicles ################################
 
-@app.route('/vehicles')
-def view_vehicles():
-    return render_template("vehicles.j2", title="Vehicles", vehicles=vehicle_info)
-
 @app.route('/vehicles', methods=["POST","GET"])
-def view_skills():
+def view_vehicles():
     if request.method == "GET":
         cursor = mysql.connection.cursor()
         query = "SELECT vehicle_id, vehicle_type, num_spikes, color, manufacture_year FROM Vehicles;"
@@ -274,7 +270,7 @@ def view_skills():
 ######################### DELETE VEHICLE #################################
 
 @app.route('/delete_vehicle/<int:vehicle_id>')
-def delete_orc(orc_id):
+def delete_vehicle(vehicle_id):
     query = "DELETE FROM Vehicles WHERE vehicle_id = %s;"
     cursor = mysql.connection.cursor()
     cursor.execute(query, (vehicle_id,))
