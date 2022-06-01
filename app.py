@@ -374,12 +374,8 @@ def test_db_connection():
 
 @app.route('/skills', methods=["POST","GET"])
 def view_skills():
+    cursor = mysql.connection.cursor()
     if request.method == "GET":
-        cursor = mysql.connection.cursor()
-        query = "SELECT skill_id, skill_name FROM Skills;"
-        cursor.execute(query)
-
-        skill_info = cursor.fetchall()
         query = "SELECT skill_id, skill_name FROM Skills;"
         cursor.execute(query)
         skill_info = cursor.fetchall()
@@ -387,29 +383,20 @@ def view_skills():
         return render_template("skills.j2", title="Skills", skills=skill_info)
 
     elif request.method == "POST":
-        if request.form.get("Search"):
-            print("SEARCHING")
+        # Add Skill to Skills table
+        skill_name = request.form['skill_name']
+        insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
+        data = (skill_name, )
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
 
-        else:
-            cursor = mysql.connection.cursor()
-            skill_name = request.form['skill_name']
-            if skill_name == "":
-                insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
-                data = (skill_name)
-                cursor.execute(insert_query, data)
-            else:
-                insert_query = query = 'INSERT INTO Skills (skill_name) VALUES (%s)'
-                data = (skill_name)
-                cursor.execute(insert_query, data)
-            mysql.connection.commit()
-
-            # Update html
-            cursor = mysql.connection.cursor()
-            query = "SELECT skill_id, skill_name FROM Skills;"
-            cursor.execute(query)
-            skill_info = cursor.fetchall()
-            print(skill_info)
-            return render_template("skills.j2", title="Skills", skills=skill_info)
+        # Update html
+        cursor = mysql.connection.cursor()
+        query = "SELECT skill_id, skill_name FROM Skills;"
+        cursor.execute(query)
+        skill_info = cursor.fetchall()
+        print(skill_info)
+        return render_template("skills.j2", title="Skills", skills=skill_info)
 
 ############## Skills (Delete) #####################
 
