@@ -67,9 +67,29 @@ def view_items():
         item_info = cursor.fetchall()
         return render_template("items.j2", title="Items", items=item_info, item_types=item_type_info)
 
-@app.route('/items_types')
+@app.route('/items_types', methods=["POST", "GET"])
 def view_item_types():
-    return render_template("itemTypes.j2", title="Item Types", item_types=item_type_info)
+    cursor = mysql.connection.cursor()
+    if request.method == "GET":
+        query = "SELECT item_type_id, item_type FROM Item_types;"
+        cursor.execute(query)
+        item_type_info = cursor.fetchall()
+        print(item_type_info)
+        return render_template("itemTypes.j2", title="Item Types", item_types=item_type_info)
+
+    elif request.method == "POST":
+        # Add Item type to Items type table
+        itype = request.form["item_type"]
+        insert_query = query = 'INSERT INTO Item_types (item_type) VALUES (%s)'
+        data = (itype, )
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
+
+        #Update HTML
+        query = "SELECT item_type_id, item_type FROM Item_types;"
+        cursor.execute(query)
+        item_type_info = cursor.fetchall()
+        return render_template("itemTypes.j2", title="Item Types", item_types=item_type_info)
 
 @app.route('/jobs')
 def view_jobs():
@@ -84,10 +104,6 @@ def view_orc_skills():
     return render_template("orcHasSkills.j2", title="Orc Has Skills", orc_skills=orc_skills_info)
 
 ##################### Orcs ############################
-# Search
-# @app.route('/search', methods=["POST"])
-# def search_orcs():
-
 # Insert
 @app.route('/orcs', methods=["POST","GET"])
 def view_orcs():
