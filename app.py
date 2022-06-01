@@ -28,9 +28,44 @@ def index():
 def view_home():
     return render_template("index.html", title="Home")
 
-@app.route('/items')
+@app.route('/items', methods=["POST", "GET"])
 def view_items():
-    return render_template("items.j2", title="Items", items=item_info)
+    cursor = mysql.connection.cursor()
+    if request.method == "GET":
+        query = "SELECT item_type_id, item_type FROM Item_types;"
+        cursor.execute(query)
+        item_type_info = cursor.fetchall()
+        query = "SELECT Items.item_id, Items.item_name, Items.item_color, \
+            Items.item_year, Items.item_size, Item_types.item_type FROM Items \
+            LEFT JOIN Item_types ON Items.item_type_id = Item_types.item_type_id;"
+        cursor.execute(query)
+        item_info = cursor.fetchall()
+        print(item_info)
+        return render_template("items.j2", title="Items", items=item_info, item_types=item_type_info)
+
+    elif request.method == "POST":
+        # Add Item to Items table
+        name = request.form['item_name']
+        color = request.form['item_color']
+        year = request.form['item_year']
+        size = request.form['item_size']
+        item_type = request.form['item_type_id']
+        insert_query = query = 'INSERT INTO Items (item_name, item_color, item_year, \
+            item_size, item_type_id) VALUES (%s, %s, %s, %s, %s)'
+        data = (name, color, year, size, item_type)
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
+
+        #Update HTML
+        query = "SELECT item_type_id, item_type FROM Item_types;"
+        cursor.execute(query)
+        item_type_info = cursor.fetchall()
+        query = "SELECT Items.item_id, Items.item_name, Items.item_color, \
+            Items.item_year, Items.item_size, Item_types.item_type FROM Items \
+            LEFT JOIN Item_types ON Items.item_type_id = Item_types.item_type_id;"
+        cursor.execute(query)
+        item_info = cursor.fetchall()
+        return render_template("items.j2", title="Items", items=item_info, item_types=item_type_info)
 
 @app.route('/items_types')
 def view_item_types():
@@ -66,10 +101,10 @@ def view_orcs():
         cursor.execute(query)
         vehicles_info = cursor.fetchall()
         query = "SELECT Orcs.orc_id, Orcs.first_name, Orcs.last_name, Orcs.height_inches, Orcs.weight_lb, \
-        Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
-        Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
-        LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
-        LEFT JOIN Vehicles ON Orcs.vehicle_id = Vehicles.vehicle_id;"
+            Orcs.birth_date, Orcs.combat_ready, Orcs.conscription_date, \
+            Orcs.salary_gold_coins, Vehicles.vehicle_type, Jobs.title FROM Orcs \
+            LEFT JOIN Jobs ON Orcs.job_id = Jobs.job_id \
+            LEFT JOIN Vehicles ON Orcs.vehicle_id = Vehicles.vehicle_id;"
         cursor.execute(query)
         orcs_info = cursor.fetchall()
         print(orcs_info)
@@ -469,52 +504,6 @@ skill_info = [
     },
 ]
 
-item_info = [
-    {
-        "item_id": 1,
-        "item_name": "Warhammer",
-        "item_color": "Grey",
-        "item_year": "2017",
-        "item_size": "Large",
-        "item_type_id": 1
-    },
-    {
-        "item_id": 2,
-        "item_name": "Lute",
-        "item_color": "Beige",
-        "item_year": "1998",
-        "item_size": "Medium",
-        "item_type_id": 4 
-    },
-    {
-        "item_id": 3,
-        "item_name": "Fork",
-        "item_color": "Silver",
-        "item_year": "2021",
-        "item_size": "Extra Small",
-        "item_type_id": 2 
-    }
-]
-
-item_type_info = [
-    {
-        "item_type_id": 1,
-        "item_type": "Weapon"
-    },
-    {
-        "item_type_id": 2,
-        "item_type": "Tool"
-    },
-    {
-        "item_type_id": 3,
-        "item_type": "Toy"
-    },
-    {
-        "item_type_id": 4,
-        "item_type": "Musical Instrument"
-    },
-]
-
 job_info = [
     {
         "job_id": 1,
@@ -616,11 +605,8 @@ orc_skills_info = [
     },
 ]
 if __name__ == "__main__":
-    # port = int(os.environ.get('PORT', 61107)) 
-    #                                 ^^^^
-    #              You can replace this number with any valid port
+    port = int(os.environ.get('PORT', 61107)) 
     app.run(debug=True) 
-
-    # app.run(port=port) 
+    app.run(port=port) 
 
 #minor test to see if this works
