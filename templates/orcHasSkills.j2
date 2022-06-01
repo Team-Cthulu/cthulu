@@ -13,11 +13,13 @@
     <tbody>
     {% for item in orc_skills %}
     <tr>
-        <td>{{item['orc_skill_id']}}</td>
-        <td>{{item['first_name']}}</td>
-        <td>{{item['last_name']}}</td>
-        <td>{{item['skill']}}</td>
-        <td>{{item['skill_level']}}</td>
+        <td>{{item[0]}}</td>
+        <td>{{item[1]}}</td>
+        <td>{{item[2]}}</td>
+        <td>{{item[3]}}</td>
+        <td>{{item[4]}}</td>
+        <td><a href="edit_orc_skill/{{item[0]}}" class="btn btn-default">Edit</a><td>
+        <td><a href="delete_orc_skill/{{item[0]}}" class="btn btn-default">Delete</a></td>
     </tr>
     {% endfor %}
     </table>
@@ -26,18 +28,18 @@
             <legend><strong>Work work</strong></legend>
                 <fieldset class="fields">
                     <label> Orc </label> <select name="orc_id">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Orgrim Warhammer</option>
-                        <option value="2">Little Peon</option>
-                        <option value="3">Mother Theresa</option>
+                        <option value="">&nbsp;</option>
+                        {% for orc in orcs %}
+                        <option value="{{orc[0]}}">{{orc[1]}} {{orc[2]}}</option>
+                        {% endfor %}
                         </select>
                     <label> Skill </label> <select name="skill_id">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Fighting</option>
-                        <option value="2">Fletching</option>
-                        <option value="3">Cooking</option>
+                        <option value="">&nbsp;</option>
+                        {% for skill in skills %}
+                        <option value="{{skill[0]}}">{{skill[1]}}</option>
+                        {% endfor %}
                         </select>
-                    <label> Skill Level </label> <input type="text" name"skill_level">
+                    <label> Skill Level </label> <input type="text" name="skill_level">
                 </fieldset>
                     <input class="btn" type="submit" id="addItem" value="Add Skill">
         </form>

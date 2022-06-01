@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div id="update">
+        <form method="POST" id="updateOrcSkill">
+            <legend><strong>Update Orc Skills</strong></legend>
+                <fieldset class="fields">
+                <input type="hidden" name="orc_skill_id" id="updateOrcSkillID" value={{data[0][0]}}>
+                <label> ID: </label> {{data[0][0]}}
+                    <label> Orc </label> <select name="orc_id">
+                        <option value="0">&nbsp;</option>
+                        {% for orc in orcs %}
+                            {% if orc[0] == data[0][1]%}
+                                <option value="{{orc[0]}}" selected>{{orc[1]}} {{orc[2]}}</option>
+                            {% else %}
+                                <option value="{{orc[0]}}">{{orc[1]}} {{orc[2]}}</option>
+                            {% endif %}
+                        {% endfor %}
+                        </select>
+                    <label> Skill </label> <select name="skill_id">
+                        <option value="0"&nbsp;</option>
+                        {% for skill in skills %}
+                            {% if skill[0] == data[0][2]%}
+                                <option value="{{skill[0]}}" selected>{{skill[1]}}</option>
+                            {% else %}
+                                <option value="{{skill[0]}}">{{skill[1]}}</option>
+                            {% endif %}
+                        {% endfor %}
+                        </select>
+                    <label> Skill Level </label> <input type="text" name="skill_level" value={{data[0][3]}}>
+                </fieldset>
+                    <input class="btn" type="submit" id="updateSaveOrcSkill" name="Edit_Orc_Skill" value="Update Skill">
+            </form>
+        </div>
+{% endblock %}

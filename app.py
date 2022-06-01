@@ -122,9 +122,93 @@ def view_jobs():
 def view_orc_items():
     return render_template("orcHasItems.j2", title="Orc Has Items", orc_items=orc_items_info)
 
-@app.route('/orc_has_skills')
+@app.route('/orc_has_skills', methods=["POST","GET"])
 def view_orc_skills():
-    return render_template("orcHasSkills.j2", title="Orc Has Skills", orc_skills=orc_skills_info)
+    cursor = mysql.connection.cursor()
+    if request.method == "GET":
+        query = "SELECT orc_id, first_name, last_name FROM Orcs;"
+        cursor.execute(query)
+        orcs_info = cursor.fetchall()
+        query = "SELECT skill_id, skill_name FROM Skills;"
+        cursor.execute(query)
+        skills_info = cursor.fetchall()
+        query = "SELECT Orc_has_Skills.orc_skill_id, Orcs.first_name, Orcs.last_name, \
+                Skills.skill_name, Orc_has_Skills.skill_level FROM Orc_has_Skills \
+                LEFT JOIN Orcs on Orc_has_Skills.orc_id = Orcs.orc_id \
+                LEFT JOIN Skills on Orc_has_Skills.skill_id = Skills.skill_id;"
+        cursor.execute(query)
+        orc_skills_info = cursor.fetchall()
+        print(orc_skills_info)
+        return render_template("orcHasSkills.j2", title="Orc Has Skills", orc_skills=orc_skills_info, orcs=orcs_info, skills=skills_info)
+
+    elif request.method == "POST":
+        orc_id = request.form['orc_id']
+        skill_id = request.form['skill_id']
+        level = request.form['skill_level']
+        insert_query = query = 'INSERT INTO Orc_has_Skills (orc_id, skill_id, skill_level) \
+            VALUES (%s, %s, %s)'
+        data = (orc_id, skill_id, level)
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
+
+        #Update HTML
+        query = "SELECT orc_id, first_name, last_name FROM Orcs;"
+        cursor.execute(query)
+        orcs_info = cursor.fetchall()
+        query = "SELECT skill_id, skill_name FROM Skills;"
+        cursor.execute(query)
+        skills_info = cursor.fetchall()
+        query = "SELECT Orc_has_Skills.orc_skill_id, Orcs.first_name, Orcs.last_name, \
+                Skills.skill_name, Orc_has_Skills.skill_level FROM Orc_has_Skills \
+                LEFT JOIN Orcs on Orc_has_Skills.orc_id = Orcs.orc_id \
+                LEFT JOIN Skills on Orc_has_Skills.skill_id = Skills.skill_id;"
+        cursor.execute(query)
+        orc_skills_info = cursor.fetchall()
+        print(orc_skills_info)
+        return render_template("orcHasSkills.j2", title="Orc Has Skills", orc_skills=orc_skills_info, orcs=orcs_info, skills=skills_info)
+
+@app.route('/delete_orc_skill/<int:orc_skill_id>')
+def delete_orc_skill(orc_skill_id):
+    query = "DELETE FROM Orc_has_Skills WHERE orc_skill_id = %s;"
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, (orc_skill_id, ))
+    mysql.connection.commit()
+
+    return redirect("/orc_has_skills")
+
+@app.route('/edit_orc_skill/<int:orc_skill_id>', methods=["POST","GET"])
+def edit_orc_skills(orc_skill_id):
+    if request.method == "GET":
+        query = "SELECT * FROM Orc_has_Skills where orc_skill_id = %s" % (orc_skill_id)
+        cursor = mysql.connection.cursor()
+        cursor.execute(query)
+        orc_skill_info = cursor.fetchall()
+        query = "SELECT orc_id, first_name, last_name FROM Orcs;"
+        cursor.execute(query)
+        orc_info = cursor.fetchall()
+        query = "SELECT skill_id, skill_name FROM Skills;"
+        cursor.execute(query)
+        skill_info = cursor.fetchall()
+        print(orc_skill_info)
+        return render_template("editOrcSkills.j2", title="Edit Orc Skills", orcs=orc_info, data=orc_skill_info, skills=skill_info)
+
+    elif request.method == "POST":
+        if request.form.get("Edit_Orc_Skill"):
+            osi = request.form["orc_skill_id"]
+            oi = request.form["orc_id"]
+            si = request.form["skill_id"]
+            sl = request.form["skill_level"]
+            query = "UPDATE Orc_has_Skills SET \
+                orc_id = %s, \
+                skill_id = %s, \
+                skill_level = %s \
+                WHERE Orc_has_Skills.orc_skill_id = %s;"
+            data = (oi, si, sl, osi)
+            cursor = mysql.connection.cursor()
+            cursor.execute(query, data)
+            mysql.connection.commit()
+
+        return redirect("/orc_has_skills")
 
 ##################### Orcs ############################
 # Insert
@@ -238,7 +322,7 @@ def delete_orc(orc_id):
 @app.route("/edit_orc/<int:orc_id>", methods=["POST", "GET"])
 def edit_orc(orc_id):
     if request.method == "GET":
-        query = "SELECT * FROm Orcs where orc_id = %s" % (orc_id)
+        query = "SELECT * FROM Orcs where orc_id = %s" % (orc_id)
         cursor = mysql.connection.cursor()
         cursor.execute(query)
         data = cursor.fetchall()
@@ -488,148 +572,6 @@ def delete_item(item_id):
 
 # Listener
 
-people_from_app_py = [
-{
-    "name": "Thomas",
-    "age": 33,
-    "location": "New Mexico",
-    "favorite_color": "Blue"
-},
-{
-    "name": "Gregory",
-    "age": 41,
-    "location": "Texas",
-    "favorite_color": "Red"
-},
-{
-    "name": "Vincent",
-    "age": 27,
-    "location": "Ohio",
-    "favorite_color": "Green"
-},
-{
-    "name": "Alexander",
-    "age": 29,
-    "location": "Florida",
-    "favorite_color": "Orange"
-}
-]
-
-skill_info = [
-    {
-        "skill_id": 1,
-        "skill_name": "fighting"
-    },
-    {
-        "skill_id": 2,
-        "skill_name": "fletching"
-    },
-    {
-        "skill_id": 3,
-        "skill_name": "cooking"
-    },
-]
-
-job_info = [
-    {
-        "job_id": 1,
-        "title": "Cook",
-        "num_rations": 15,
-        "combat_role": 0
-    },
-    {
-        "job_id": 2,
-        "title": "Peon",
-        "num_rations": 10,
-        "combat_role": 0 
-    },
-    {
-        "job_id": 3,
-        "title": "Warlord",
-        "num_rations": 3524,
-        "combat_role": 1 
-    },
-]
-
-vehicle_info = [
-    {
-        "vehicle_id": 1,
-        "vehicle_type": "Elephant",
-        "num_spikes": 14,
-        "color": "Gray",
-        "manufacture_year": 1511
-    },
-    {
-        "vehicle_id": 2,
-        "vehicle_type": "Horse",
-        "num_spikes": 3,
-        "color": "White",
-        "manufacture_year": 1213
-    },
-    {
-        "vehicle_id": 3,
-        "vehicle_type": "Tank",
-        "num_spikes": 10,
-        "color": "Black",
-        "manufacture_year": 3211 
-    },
-]
-
-
-orc_items_info = [
-    {
-        "orc_item_id": 1,
-        "first_name": "Orgrim",
-        "last_name": "Doomhammer",
-        "item": "Warhammer",
-        "item_quantity": 1
-    },
-    {
-        "orc_item_id": 2,
-        "first_name": "Little",
-        "last_name": "Peon",
-        "item": "Lute",
-        "item_quantity": 3 
-    },
-    {
-        "orc_item_id": 3,
-        "first_name": "Mother",
-        "last_name": "Theresa",
-        "item": "Fork",
-        "item_quantity": 100 
-    },
-]
-
-orc_skills_info = [
-    {
-        "orc_skill_id": 1,
-        "first_name": "Orgrim",
-        "last_name": "Doomhammer",
-        "skill": "Fighting",
-        "skill_level": 60 
-    },
-    {
-        "orc_skill_id": 2,
-        "first_name": "Orgrim",
-        "last_name": "Doomhammer",
-        "skill": "Cooking",
-        "skill_level": 2 
-    },
-    {
-        "orc_skill_id": 3,
-        "first_name": "Mother",
-        "last_name": "Theresa",
-        "skill": "Cooking",
-        "skill_level": 40 
-    },
-    {
-        "orc_skill_id": 4,
-        "first_name": "Little",
-        "last_name": "Peon",
-        "skill": "Fighting",
-        "skill_level": 1 
-    },
-]
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 61107)) 
     app.run(debug=True) 
