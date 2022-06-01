@@ -12,10 +12,10 @@
     <tbody>
     {% for item in jobs %}
     <tr>
-        <td>{{item['job_id']}}</td>
-        <td>{{item['title']}}</td>
-        <td>{{item['num_rations']}}</td>
-        <td>{{item['combat_role']}}</td>
+        <td>{{item[0]}}</td>
+        <td>{{item[1]}}</td>
+        <td>{{item[2]}}</td>
+        <td>{{item[3]}}</td>
     </tr>
     {% endfor %}
     </table>
@@ -23,8 +23,8 @@
         <form method="POST" id="addJob">
             <legend><strong>Add Job</strong></legend>
                 <fieldset class="fields">
-                    <label> Title </label> <input type="text" name"title">
-                    <label> Number of Rations </label> <input type="text" name"num_rations">
+                    <label> Title </label> <input type="text" name="title">
+                    <label> Number of Rations </label> <input type="text" name="num_rations">
                     <label> Combat Role </label> <select name="combat_role">
                         <option value="0">No</option>
                         <option value="1">Yes</option>

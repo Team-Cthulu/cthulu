@@ -91,8 +91,31 @@ def view_item_types():
         item_type_info = cursor.fetchall()
         return render_template("itemTypes.j2", title="Item Types", item_types=item_type_info)
 
-@app.route('/jobs')
+@app.route('/jobs', methods=["POST", "GET"])
 def view_jobs():
+    cursor = mysql.connection.cursor()
+    if request.method == "GET":
+        query = "SELECT job_id, title, num_rations, combat_role FROM Jobs;"
+        cursor.execute(query)
+        job_info = cursor.fetchall()
+        print(job_info)
+        return render_template("jobs.j2", title="Jobs", jobs=job_info)
+
+    elif request.method == "POST":
+        # Add Job to jobs table
+        title = request.form['title']
+        nr = request.form['num_rations']
+        cr = request.form['combat_role']
+        insert_query = query = 'INSERT INTO Jobs (title, num_rations, combat_role) VALUES (%s, %s, %s)'
+        data = (title, nr, cr)
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
+
+        #Update HTML
+        query = "SELECT job_id, title, num_rations, combat_role FROM Jobs;"
+        cursor.execute(query)
+        job_info = cursor.fetchall()
+        return render_template("jobs.j2", title="Jobs", jobs=job_info)
     return render_template("jobs.j2", title="Jobs", jobs=job_info)
 
 @app.route('/orc_has_items')
