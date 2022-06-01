@@ -13,13 +13,11 @@
     <tbody>
     {% for item in orc_items %}
     <tr>
-        <td>{{item['orc_item_id']}}</td>
-        <td>{{item['first_name']}}</td>
-        <td>{{item['last_name']}}</td>
-        <td>{{item['item']}}</td>
-        <td>{{item['item_quantity']}}</td>
-        <td><a href="#">Edit</a></td>
-        <td><a href="#">Delete</a></td>
+        <td>{{item[0]}}</td>
+        <td>{{item[1]}}</td>
+        <td>{{item[2]}}</td>
+        <td>{{item[3]}}</td>
+        <td>{{item[4]}}</td>
     </tr>
     {% endfor %}
     </table>
@@ -29,17 +27,17 @@
                 <fieldset class="fields">
                     <label> Orc </label> <select name="orc_id">
                         <option value="0">&nbsp;</option>
-                        <option value="1">Orgrim Doomhammer</option>
-                        <option value="2">Little Peon</option>
-                        <option value="3">Mother Theresa</option>
+                        {% for orc in orcs %}
+                        <option value="{{orc[0]}}">{{orc[1]}} {{orc[2]}}</option>
+                        {% endfor %}
                         </select>
                     <label> Item </label> <select name="item_id">
-                        <option value="0">&nbsp;</option>
-                        <option value="1">Warhammer</option>
-                        <option value="2">Lute</option>
-                        <option value="3">Fork</option>
+                        <option value="">&nbsp;</option>
+                        {% for item in items %}
+                        <option value="{{item[0]}}">{{item[1]}}</option>
+                        {% endfor %}
                         </select>
-                    <label> Quantity </label> <input type="text" name"item_quantity">
+                    <label> Item Quantity </label> <input type="text" name="item_quantity">
                 </fieldset>
                     <input class="btn" type="submit" id="addItem" value="Bequeath Item(s)">
         </form>

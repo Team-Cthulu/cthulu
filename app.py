@@ -118,9 +118,51 @@ def view_jobs():
         return render_template("jobs.j2", title="Jobs", jobs=job_info)
     return render_template("jobs.j2", title="Jobs", jobs=job_info)
 
-@app.route('/orc_has_items')
+@app.route('/orc_has_items', methods=["GET", "POST"])
 def view_orc_items():
-    return render_template("orcHasItems.j2", title="Orc Has Items", orc_items=orc_items_info)
+    cursor = mysql.connection.cursor()
+    if request.method == "GET":
+        query = "SELECT orc_id, first_name, last_name FROM Orcs;"
+        cursor.execute(query)
+        orcs_info = cursor.fetchall()
+        query = "SELECT item_id, item_name FROM Items;"
+        cursor.execute(query)
+        items_info = cursor.fetchall()
+        query = "SELECT Orc_has_Items.orc_item_id, Orcs.first_name, Orcs.last_name, \
+                Items.item_name, Orc_has_Items.item_quantity FROM Orc_has_Items \
+                LEFT JOIN Orcs on Orc_has_Items.orc_id = Orcs.orc_id \
+                LEFT JOIN Items on Orc_has_Items.item_id = Items.item_id;"
+        cursor.execute(query)
+        orc_items_info = cursor.fetchall()
+        print(orc_items_info)
+        return render_template("orcHasItems.j2", title="Orc Has Items", orc_items=orc_items_info, orcs=orcs_info, items=items_info)
+
+    if request.method == "POST":
+        orc_id = request.form['orc_id']
+        item_id = request.form['item_id']
+        item_quantity = request.form['item_quantity']
+        insert_query = query = 'INSERT INTO Orc_has_Items (orc_id, item_id, item_quantity) \
+            VALUES (%s, %s, %s)'
+        data = (orc_id, item_id, item_quantity)
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
+
+        # Update HTML
+        query = "SELECT orc_id, first_name, last_name FROM Orcs;"
+        cursor.execute(query)
+        orcs_info = cursor.fetchall()
+        query = "SELECT item_id, item_name FROM Items;"
+        cursor.execute(query)
+        items_info = cursor.fetchall()
+        query = "SELECT Orc_has_Items.orc_item_id, Orcs.first_name, Orcs.last_name, \
+                Items.item_name, Orc_has_Items.item_quantity FROM Orc_has_Items \
+                LEFT JOIN Orcs on Orc_has_Items.orc_id = Orcs.orc_id \
+                LEFT JOIN Items on Orc_has_Items.item_id = Items.item_id;"
+        cursor.execute(query)
+        orc_items_info = cursor.fetchall()
+        print(orc_items_info)
+        return render_template("orcHasItems.j2", title="Orc Has Items", orc_items=orc_items_info, orcs=orcs_info, items=items_info)
+
 
 @app.route('/orc_has_skills', methods=["POST","GET"])
 def view_orc_skills():
