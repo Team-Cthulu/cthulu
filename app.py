@@ -437,42 +437,31 @@ def search():
 
 @app.route('/vehicles', methods=["POST","GET"])
 def view_vehicles():
+    cursor = mysql.connection.cursor()
     if request.method == "GET":
+        query = "SELECT vehicle_id, vehicle_type, num_spikes, color, manufacture_year FROM Vehicles;"
+        cursor.execute(query)
+        vehicle_info = cursor.fetchall()
+        print(vehicle_info)
+        return render_template("vehicles.j2", title="Vehicles", vehicles=vehicle_info)
+
+    elif request.method == "POST":
+        vt = request.form['vehicle_type']
+        ns = request.form['num_spikes']
+        color = request.form['color']
+        my = request.form['manufacture_year']
+        insert_query = query = 'INSERT INTO Vehicles (vehicle_type, num_spikes, color, manufacture_year) VALUES (%s, %s, %s, %s)'
+        data = (vt, ns, color, my)
+        cursor.execute(insert_query, data)
+        mysql.connection.commit()
+
+        # Update html
         cursor = mysql.connection.cursor()
         query = "SELECT vehicle_id, vehicle_type, num_spikes, color, manufacture_year FROM Vehicles;"
         cursor.execute(query)
-
-        skill_info = cursor.fetchall()
-        query = "SELECT vehicle_id, vehicle_type, num_spikes, color, manufacture_year FROM Vehicles;"
-        cursor.execute(query)
-        skill_info = cursor.fetchall()
-        print(skill_info)
-        return render_template("vehicles.j2", title="Vehicles", skills=vehicle_info)
-
-    elif request.method == "POST":
-        if request.form.get("Search"):
-            print("SEARCHING")
-
-        else:
-            cursor = mysql.connection.cursor()
-            skill_name = request.form['vehicle_type']
-            if skill_name == "":
-                insert_query = query = 'INSERT INTO Vehicles (vehicle_type) VALUES (%s)'
-                data = (skill_name)
-                cursor.execute(insert_query, data)
-            else:
-                insert_query = query = 'INSERT INTO Vehicles (vehicle_type) VALUES (%s)'
-                data = (skill_name)
-                cursor.execute(insert_query, data)
-            mysql.connection.commit()
-
-            # Update html
-            cursor = mysql.connection.cursor()
-            query = "SELECT skill_id, skill_name FROM Skills;"
-            cursor.execute(query)
-            skill_info = cursor.fetchall()
-            print(skill_info)
-            return render_template("skills.j2", title="Skills", skills=skill_info)
+        vehicle_info = cursor.fetchall()
+        print(vehicle_info)
+        return render_template("vehicles.j2", title="Vehicles", vehicles=vehicle_info)
 
 ######################### DELETE VEHICLE #################################
 

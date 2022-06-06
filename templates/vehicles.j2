@@ -13,13 +13,11 @@
     <tbody>
     {% for item in vehicles %}
     <tr>
-        <td>{{item['vehicle_id']}}</td>
-        <td>{{item['vehicle_type']}}</td>
-        <td>{{item['num_spikes']}}</td>
-        <td>{{item['color']}}</td>
-        <td>{{item['manufacture_year']}}</td>
-        <td><a href="edit_skill/{{item[0]}}" class="btn btn-default">Edit</a></td>
-        <td><a href="delete_skill/{{item[0]}}" class="btn btn-default">Delete</a></td>
+        <td>{{item[0]}}</td>
+        <td>{{item[1]}}</td>
+        <td>{{item[2]}}</td>
+        <td>{{item[3]}}</td>
+        <td>{{item[4]}}</td>
     </tr>
     {% endfor %}
     </table>
@@ -27,36 +25,12 @@
         <form method="POST" id="addVehicle">
             <legend><strong>Add Vehicle</strong></legend>
                 <fieldset class="fields">
-                    <label> Vehicle Type </label> <input type="text" name"vehicle_type">
-                    <label> Number of Spikes </label> <input type="text" name"num_spikes">
-                    <label> Color </label> <input type="text" name"color">
-                    <label> Manufacture Year </label> <input type="text" name"manufacture_year">
+                    <label> Vehicle Type </label> <input type="text" name="vehicle_type">
+                    <label> Number of Spikes </label> <input type="text" name="num_spikes">
+                    <label> Color </label> <input type="text" name="color">
+                    <label> Manufacture Year </label> <input type="text" name="manufacture_year">
                 </fieldset>
                     <input class="btn" type="submit" id="addVehicle" value="Add Vehicle">
-        </form>
-    </div>
-    <div id="update">
-    <legend><strong>Update Vehicle</strong></legend>
-                <fieldset class="fields">
-                    <label> Vehicle Type </label> <input type="text" name"vehicle_type">
-                    <label> Number of Spikes </label> <input type="text" name"num_spikes">
-                    <label> Color </label> <input type="text" name"color">
-                    <label> Manufacture Year </label> <input type="text" name"manufacture_year">
-                </fieldset>
-                    <input class="btn" type="submit" id="updateVehicle" value="Update Vehicle">
-        </form>
-    </div>
-    <div id="delete" style="display: block">
-        <form method="DELETE" id="deleteVehicle">
-            <legend><strong>Delete Vehicle</strong></legend>
-                <fieldset class="fields">
-                    <label> Vehicle Type </label> <input type="text" name"vehicle_type">
-                    <label> Number of Spikes </label> <input type="text" name"num_spikes">
-                    <label> Color </label> <input type="text" name"color">
-                    <label> Manufacture Year </label> <input type="text" name"manufacture_year">
-                <input type="hidden" name="vehicle_id" id="deleteVehicleID" value="1">
-            </fieldset>
-            <input class="btn" type="submit" id="DeleteVehicle" value="Delete Vehicle">
         </form>
     </div>
 {% endblock%}
